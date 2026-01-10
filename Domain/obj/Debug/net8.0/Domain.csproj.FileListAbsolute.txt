@@ -1,0 +1,11 @@
+D:\CRM\HCRM\Domain\bin\Debug\net8.0\Domain.deps.json
+D:\CRM\HCRM\Domain\bin\Debug\net8.0\Domain.dll
+D:\CRM\HCRM\Domain\bin\Debug\net8.0\Domain.pdb
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.dll
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\refint\Domain.dll
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\Domain.pdb
+D:\CRM\HCRM\Domain\obj\Debug\net8.0\ref\Domain.dll

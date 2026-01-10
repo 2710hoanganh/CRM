@@ -1,0 +1,3 @@
+dotnet ef migrations add UpdateUserEntity --project Persistence --startup-project Presentation
+
+dotnet ef database update --project Persistence --startup-project Presentation

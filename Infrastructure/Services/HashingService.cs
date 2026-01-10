@@ -1,0 +1,17 @@
+using Application.Repositories.Base;
+
+namespace Infrastructure.Services
+{
+    public class HashingService : IHashPassword
+    {
+        public Task<string> HashPassword(string password)
+        {
+            return Task.FromResult(BCrypt.Net.BCrypt.HashPassword(password));
+        }
+
+        public Task<bool> VerifyPassword(string password, string hashedPassword)
+        {
+            return Task.FromResult(BCrypt.Net.BCrypt.Verify(password, hashedPassword));
+        }   
+    }
+}

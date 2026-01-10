@@ -1,0 +1,7 @@
+﻿services:
+  presentation:
+    image: presentation
+    build:
+      context: .
+      dockerfile: Presentation/Dockerfile
+

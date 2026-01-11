@@ -30,6 +30,7 @@ namespace Application.Features.Loan.Command
                 {
                     var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)request.Request.LoanRate, cancellationToken);
                     var total = await _loanInterestRate.CalculateTotal(request.Request.LoanAmount, request.Request.LoanTerm, interestRate, cancellationToken);
+                    //loan term in months
                     var loan = new Domain.Entities.Loan
                     {
                         Amount = request.Request.LoanAmount,

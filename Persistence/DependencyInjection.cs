@@ -19,6 +19,9 @@ namespace Persistence.DependencyInjection
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserReferenceRepository, UserReferenceRepository>();
+            services.AddScoped<ILoanRepository, LoanRepository>();
+            
             return services;
         }
     }

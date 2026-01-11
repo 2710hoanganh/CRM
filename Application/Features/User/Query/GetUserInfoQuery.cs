@@ -7,26 +7,22 @@ using Application.Repositories.Base;
 
 namespace Application.Features.User.Query
 {
-    public class GetUserInfoQuery : IRequest<Response<UserInfo>>
+    public class GetUserInfoQuery : BaseFields, IRequest<Response<UserInfo>>
     {
-        public required GetInfoRequest Request { get; set; }
         public class GetUserInfoQueryHandler : IRequestHandler<GetUserInfoQuery, Response<UserInfo>>
         {
-
             private readonly IUserRepository _userRepository;
-            private readonly IUnitOfWork _unitOfWork;
             private readonly IAutoMapper _autoMapper;
-            public GetUserInfoQueryHandler(IUserRepository userRepository, IUnitOfWork unitOfWork, IAutoMapper autoMapper)
+            public GetUserInfoQueryHandler(IUserRepository userRepository, IAutoMapper autoMapper)
             {
                 _userRepository = userRepository;
-                _unitOfWork = unitOfWork;
                 _autoMapper = autoMapper;
             }
             public async Task<Response<UserInfo>> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    var user = await _userRepository.GetOne(x => x.Id == (long)request.Request.Id, null, null, cancellationToken);
+                    var user = await _userRepository.GetOne(x => x.Id == request.Id, null, null, cancellationToken);
                     if (user == null)
                     {
                         return new Response<UserInfo>(ResponseResult.ERROR, "Get user info failed", null, null);

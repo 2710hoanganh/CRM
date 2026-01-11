@@ -12,7 +12,7 @@ namespace Persistence.Contexts
         }
 
         public DbSet<User> Users { get; set; }
-
+        public DbSet<UserReference> UserReferences { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

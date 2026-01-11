@@ -17,3 +17,4 @@ D:\CRM\HCRM\Persistence\obj\Debug\net8.0\refint\Persistence.dll
 D:\CRM\HCRM\Persistence\obj\Debug\net8.0\Persistence.pdb
 D:\CRM\HCRM\Persistence\obj\Debug\net8.0\Persistence.genruntimeconfig.cache
 D:\CRM\HCRM\Persistence\obj\Debug\net8.0\ref\Persistence.dll
+D:\CRM\HCRM\Persistence\obj\Debug\net8.0\Persistence.sourcelink.json

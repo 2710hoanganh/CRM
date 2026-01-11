@@ -1,25 +1,83 @@
-﻿**/.dockerignore
-**/.env
+﻿# Git
 **/.git
 **/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*
+**/charts
+
+# Environment and secrets
+**/.env
+**/secrets.dev.yaml
+**/values.dev.yaml
+
+# IDE and editor files
 **/.vs
 **/.vscode
 **/.idea
+**/*.swp
+**/*.swo
+**/*~
+**/node_modules
+
+# Project files
+**/.project
+**/.settings
+**/.toolstarget
 **/*.*proj.user
 **/*.dbmdl
 **/*.jfm
 **/azds.yaml
+
+# Build artifacts
 **/bin
-**/charts
-**/docker-compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
 **/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
+**/out
+**/publish
+
+# NuGet packages
+**/*.nupkg
+**/packages
+
+# Test results and coverage
+**/TestResults
+**/coverage
+**/*.trx
+**/*.coverage
+
+# Logs and temporary files
+**/*.log
+**/*.tmp
+**/logs
+
+# Database files
+**/*.db
+**/*.mdf
+**/*.ldf
+**/App_Data
+
+# OS generated files
+**/.DS_Store
+**/Thumbs.db
+**/*.tmp
+
+# Documentation
 LICENSE
 README.md
+**/*.md
+
+# Rider/WebStorm
+**/.idea/
+**/*.iml
+
+# Windows
+**/desktop.ini
+
+# macOS
+**/.DS_Store
+**/__MACOSX
+
+# Linux
+**/*~

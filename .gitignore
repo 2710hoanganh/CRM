@@ -1,170 +1,128 @@
-# .NET
+############################
+# .NET build outputs
+############################
 **/bin/
 **/obj/
 **/out/
-**/*.user
-**/*.suo
-**/*.cache
-**/*.log
-**/packages/
-**/*.nupkg
-**/*.snupkg
-
-# Build results
 **/build/
 **/publish/
 **/dist/
+artifacts/
+
+############################
+# Build configurations
+############################
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
 x86/
-[Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Ll]og/
-[Ll]ogs/
+ARM/
+ARM64/
+Win32/
 
-# .NET Core
-project.lock.json
-project.fragment.lock.json
-artifacts/
+############################
+# NuGet
+############################
+**/packages/
+**/*.nupkg
+**/*.snupkg
 
-# ASP.NET Scaffolding
-ScaffoldingReadMe.txt
-
-# Test results
+############################
+# Test results & coverage
+############################
 **/TestResults/
+**/test-results/
 **/coverage/
 **/*.trx
 **/*.coverage
 **/*.coveragexml
-**/test-results/
 CodeCoverage/
 
-# MSBuild Binary and Structured Log
-*.binlog
-
-# MSTest test Results
-[Tt]est[Rr]esult*/
-[Bb]uild[Ll]og.*
-
-# NUnit
-*.VisualState.xml
-TestResult.xml
-nunit-*.xml
-
-# Entity Framework
-**/Migrations/**/*.cs
-**/Migrations/**/*.Designer.cs
-
-# IDE - Visual Studio
-.vs/
-**/*.tmp_proj
-**/*.vspscc
-**/*.vssscc
-.vscode/
-**/*.code-workspace
-
-# IDE - Rider/WebStorm
-.idea/
-**/*.iml
-**/*.ipr
-**/*.iws
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-**/desktop.ini
-
-# Logs and temp files
+############################
+# Logs & temp files
+############################
 **/*.log
 **/*.tmp
 **/*.temp
 **/logs/
 **/temp/
 **/tmp/
+*.binlog
 
+############################
+# Visual Studio
+############################
+.vs/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+############################
+# VS Code
+############################
+.vscode/
+**/*.code-workspace
+
+############################
+# Rider / WebStorm
+############################
+.idea/
+**/*.iml
+**/*.ipr
+**/*.iws
+
+############################
+# OS generated files
+############################
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+############################
+# Environment & secrets
+############################
+.env
+.env.*
+**/*.local
+**/secrets.json
+**/connectionstrings.json
+**/appsettings.*.Development.json
+**/appsettings.*.Production.json
+**/appsettings.*.Staging.json
+
+############################
 # Database files
+############################
 **/*.db
 **/*.mdf
 **/*.ldf
 **/App_Data/
-**/data/
 
-# Environment and secrets
-.env
-.env.*
-**/*.local
-**/appsettings.*.json
-**/secrets.json
-**/appsettings.Development.json
-
-# Docker (optional for git - uncomment if needed)
-# Dockerfile*
-# docker-compose*
-# .dockerignore
-
-# Node.js (if using frontend)
+############################
+# Node.js (nếu có frontend)
+############################
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Windows
-**/Win32/
-**/x64/
-**/ARM/
-**/ARM64/
-
-# macOS
-**/.AppleDouble
-**/.LSOverride
-**/Icon
-**/.VolumeIcon.icns
-
-# Linux
-**/*~
-**/core
-
-# User specific
-**/*.user
-**/*.suo
-
-# Rider
-**/.idea/
-**/*.iml
-**/*.ipr
-**/*.iws
-
-# ReSharper
+############################
+# ReSharper / tooling
+############################
 **/_ReSharper*/
 **/*.DotSettings.user
 
-# StyleCop
-**/StyleCop.Cache
-
-# Files with sensitive information
-**/connectionstrings.json
-**/appsettings.production.json
-**/appsettings.staging.json
-
+############################
 # Backup files
+############################
 **/*.bak
 **/*.backup
 **/*.old
-
-# Temporary ASP.NET files
-**/Microsoft.NET
-**/Roslyn
-
-# Others
-~$*
 *~

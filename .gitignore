@@ -168,3 +168,15 @@ yarn-error.log*
 # Others
 ~$*
 *~
+**/logs/    
+**/temp/
+**/tmp/
+**/logs/
+**/temp/
+**/tmp/
+**/logs/
+**/temp/
+**/tmp/
+**/logs/
+**/temp/
+**/tmp/

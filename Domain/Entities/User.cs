@@ -16,5 +16,8 @@ namespace Domain.Entities
         public DateTime BirthDate { get; set; }
         public int Gender { get; set; }
         public int Status { get; set; }
+
+        public ICollection<UserReference> UserReferences { get; set; } = new List<UserReference>();
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

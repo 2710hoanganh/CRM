@@ -163,3 +163,4 @@ D:\CRM\HCRM\Presentation\obj\Debug\net8.0\Presentation.pdb
 D:\CRM\HCRM\Presentation\obj\Debug\net8.0\Presentation.genruntimeconfig.cache
 D:\CRM\HCRM\Presentation\obj\Debug\net8.0\ref\Presentation.dll
 D:\CRM\HCRM\Presentation\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\CRM\HCRM\Presentation\obj\Debug\net8.0\Presentation.sourcelink.json

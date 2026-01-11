@@ -16,6 +16,7 @@ namespace Infrastructure
             services.AddScoped<IAutoMapper, MappingService>();
             services.AddScoped<IHashPassword, HashingService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ILoanInterestRate, LoanInterestRateService>();
             return services;
         }
     }

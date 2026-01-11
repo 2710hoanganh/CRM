@@ -15,3 +15,4 @@ D:\CRM\HCRM\Infrastructure\obj\Debug\net8.0\Infrastructure.dll
 D:\CRM\HCRM\Infrastructure\obj\Debug\net8.0\refint\Infrastructure.dll
 D:\CRM\HCRM\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 D:\CRM\HCRM\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+D:\CRM\HCRM\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json

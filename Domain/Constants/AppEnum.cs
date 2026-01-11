@@ -56,4 +56,22 @@ namespace Domain.Constants.AppEnum
         Overdue = 2,
         Paid = 3
     }
+
+    public enum LoanTerm
+    {
+        OneMonth = 1,
+        ThreeMonths = 3,
+        SixMonths = 6,
+        TwelveMonths = 12,
+        TwentyFourMonths = 24,
+        ThirtySixMonths = 36,
+        FortyEightMonths = 48
+    }
+
+    public enum LoanRate
+    {
+        BaseRate = 0,
+        SpecialRate = 1,
+        PremiumRate = 2
+    }
 }

@@ -180,3 +180,18 @@ yarn-error.log*
 **/logs/
 **/temp/
 **/tmp/
+
+# .NET build outputs
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider
+.idea/
+
+# Logs
+*.log

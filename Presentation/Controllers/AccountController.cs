@@ -26,10 +26,7 @@ namespace Presentation.Controllers
         {
             var result = await _mediator.Send(new GetUserInfoQuery
             {
-                Request = new GetInfoRequest
-                {
-                    Id = ulong.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0")
-                }
+                Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0")
             });
             return Ok(new Response<UserInfo>(ResponseResult.SUCCESS)
             {

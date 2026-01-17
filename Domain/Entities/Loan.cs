@@ -16,7 +16,9 @@ namespace Domain.Entities
         public int Rate { get; set; }
         // Interest rate base on loan term and loan rate
         public decimal InterestRate { get; set; }
-        
+        public DateTime EndDate { get; set; }
+        public string? FeedBack { get; set; }
+
         public int Status { get; set; }
 
         public User User { get; set; } = null!;

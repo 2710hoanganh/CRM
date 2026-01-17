@@ -10,7 +10,7 @@ namespace Presentation.Extensions
             services.AddSwaggerGen(options =>
             {
                 var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-   
+
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
                     options.SwaggerDoc(description.GroupName, new OpenApiInfo { Title = "HCRM API", Version = description.GroupName });

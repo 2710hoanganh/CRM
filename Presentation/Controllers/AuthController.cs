@@ -10,7 +10,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,9 +21,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+        public async Task<IActionResult> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
             return Ok(new Response<RegisterModelResponse>(ResponseResult.SUCCESS)
             {
                 Data = result.Data,
@@ -32,9 +32,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginQuery query)
+        public async Task<IActionResult> Login([FromBody] LoginQuery query, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(query);
+            var result = await _mediator.Send(query, cancellationToken);
             return Ok(new Response<LoginResponse>(ResponseResult.SUCCESS)
             {
                 Data = result.Data,

@@ -38,7 +38,10 @@ namespace Infrastructure.Services
         {
             // total = amount * interest rate * months
             // round to 0 decimal places
-            return Task.FromResult(Math.Round(amount * interestRate * months, 0));
+            decimal interest = amount * interestRate * months;
+            decimal total = amount + interest;
+
+            return Task.FromResult(Math.Round(total, 0));
         }
 
         private decimal CalculateRiskFactor(int months)

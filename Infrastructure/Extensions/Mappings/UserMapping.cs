@@ -9,6 +9,7 @@ namespace Infrastructure.Extensions.Mappings
         public UserMapping()
         {
             CreateMap<User, RegisterModelResponse>().ReverseMap();
+
             CreateMap<User, UserInfo>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))

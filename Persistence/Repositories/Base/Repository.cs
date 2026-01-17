@@ -100,7 +100,7 @@ namespace Persistence.Repositories.Base
             var totalRecords = await query.CountAsync(cancellationToken);
 
             var pagedQuery = Get(filter, orderBy, includes, pageNumber, pageSize);
-            var paged = new Paged<IQueryable<T>>(pagedQuery, pageNumber, pageSize, (ulong)totalRecords);
+            var paged = new Paged<IQueryable<T>>(pagedQuery, pageNumber, pageSize, (ulong)totalRecords, null);
 
             return paged;
         }
@@ -144,7 +144,7 @@ namespace Persistence.Repositories.Base
             }
 
             var pagedQuery = query.Select(selector);
-            var paged = new Paged<IQueryable<TType>>(pagedQuery, pageNumber, pageSize, (ulong)totalRecords);
+            var paged = new Paged<IQueryable<TType>>(pagedQuery, pageNumber, pageSize, (ulong)totalRecords, null);
 
             return paged;
         }

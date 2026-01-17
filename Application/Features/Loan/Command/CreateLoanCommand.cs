@@ -11,7 +11,6 @@ namespace Application.Features.Loan.Command
     {
         public required CreateLoanRequest Request { get; set; }
 
-
         public class CreateLoanCommandHandler : IRequestHandler<CreateLoanCommand, Response<bool>>
         {
             private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +27,7 @@ namespace Application.Features.Loan.Command
             {
                 try
                 {
-                    var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)request.Request.LoanRate, cancellationToken);
+                    var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)LoanRate.BaseRate, cancellationToken);
                     var total = await _loanInterestRate.CalculateTotal(request.Request.LoanAmount, request.Request.LoanTerm, interestRate, cancellationToken);
                     //loan term in months
                     var loan = new Domain.Entities.Loan
@@ -37,14 +36,15 @@ namespace Application.Features.Loan.Command
                         Term = request.Request.LoanTerm,
                         UserId = request.Id,
                         Status = (int)LoanStatus.Pending,
-                        Rate = (int)request.Request.LoanRate,
+                        Rate = (int)LoanRate.BaseRate,
                         InterestRate = interestRate,
+                        EndDate = DateTime.Now.AddMonths(request.Request.LoanTerm),
                         Total = total,
                         PaybackAmount = Math.Round(total / request.Request.LoanTerm, 2),
                     };
                     await _loanRepository.Add(loan, cancellationToken);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
-                    
+
                     return new Response<bool>(ResponseResult.SUCCESS, "Loan created successfully", true, null);
                 }
                 catch (Exception ex)

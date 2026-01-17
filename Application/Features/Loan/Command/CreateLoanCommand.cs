@@ -27,7 +27,7 @@ namespace Application.Features.Loan.Command
             {
                 try
                 {
-                    var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)request.Request.LoanRate, cancellationToken);
+                    var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)LoanRate.BaseRate, cancellationToken);
                     var total = await _loanInterestRate.CalculateTotal(request.Request.LoanAmount, request.Request.LoanTerm, interestRate, cancellationToken);
                     //loan term in months
                     var loan = new Domain.Entities.Loan
@@ -36,7 +36,7 @@ namespace Application.Features.Loan.Command
                         Term = request.Request.LoanTerm,
                         UserId = request.Id,
                         Status = (int)LoanStatus.Pending,
-                        Rate = (int)request.Request.LoanRate,
+                        Rate = (int)LoanRate.BaseRate,
                         InterestRate = interestRate,
                         EndDate = DateTime.Now.AddMonths(request.Request.LoanTerm),
                         Total = total,

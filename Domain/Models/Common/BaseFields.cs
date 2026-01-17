@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Domain.Models.Common
 {
-	public class BaseFields
-	{
+    public class BaseFields
+    {
         [Required]
         [JsonIgnore]
         public int Id { get; set; }

@@ -11,6 +11,8 @@ namespace Domain.Entities
         public decimal PaybackAmount { get; set; }
         // Total money pay after calculate interest rate
         public decimal Total { get; set; }
+        // money user paid for this loan
+        public decimal Paid { get; set; }
         public int Term { get; set; }
         // Loan rate base on account level
         public int Rate { get; set; }

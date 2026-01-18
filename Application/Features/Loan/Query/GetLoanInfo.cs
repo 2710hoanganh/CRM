@@ -9,6 +9,7 @@ namespace Application.Features.Loan.Query
 {
     public class GetLoanInfoQuery : BaseFields, IRequest<Response<GetLoanInfoResponse>>
     {
+        public bool IsAdmin { get; set; } = false;
         public class GetLoanInfoQueryHandler : IRequestHandler<GetLoanInfoQuery, Response<GetLoanInfoResponse>>
         {
             private readonly ILoanRepository _loanRepository;

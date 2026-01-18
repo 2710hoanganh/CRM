@@ -23,7 +23,8 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("all")]
+        // [Authorize(Roles = "0,1")]
+        [HttpGet("all-admin")]
         public async Task<IActionResult> GetAllLoan([FromQuery] BasePaginationQueryDto query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllLoanQuery
@@ -38,12 +39,29 @@ namespace Presentation.Controllers
             });
         }
 
+        // [Authorize(Roles = "2")]
+        [HttpGet("all-user")]
+        public async Task<IActionResult> GetAllUserLoan([FromQuery] BasePaginationQueryDto query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllUserLoanQuery
+            {
+                Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0"),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            }, cancellationToken);
+            return Ok(new Response<Paged<List<ListLoanResponse>>>(ResponseResult.SUCCESS)
+            {
+                Data = result,
+                Message = result.Message
+            });
+        }
+
         [HttpGet("info")]
-        public async Task<IActionResult> GetLoanInfo(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetLoanInfo([FromQuery] BaseFieldsDto query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetLoanInfoQuery
             {
-                Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0")
+                Id = query.Id,
             }, cancellationToken);
 
             return Ok(new Response<GetLoanInfoResponse>(ResponseResult.SUCCESS)
@@ -67,7 +85,7 @@ namespace Presentation.Controllers
             });
         }
 
-        // [Authorize(Roles = "Admin, Manager")]
+        // [Authorize(Roles = "0,1")]
         [HttpPost("review")]
         public async Task<IActionResult> ReviewLoan([FromBody] ReviewLoanCommand command, CancellationToken cancellationToken)
         {

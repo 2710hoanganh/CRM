@@ -74,4 +74,12 @@ namespace Domain.Constants.AppEnum
         SpecialRate = 1,
         PremiumRate = 2
     }
+
+    public enum UserRepatmentStatus
+    {
+        Pending = 0,
+        Due = 1,
+        Overdue = 2,
+        Paid = 3
+    }
 }

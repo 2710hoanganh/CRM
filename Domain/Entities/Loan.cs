@@ -22,7 +22,9 @@ namespace Domain.Entities
         public string? FeedBack { get; set; }
 
         public int Status { get; set; }
-
         public User User { get; set; } = null!;
+
+        //ref
+        public ICollection<UserRepayment> UserRepayments { get; set; } = new List<UserRepayment>();
     }
 }

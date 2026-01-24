@@ -121,6 +121,22 @@ HCRM/
 - Tạo thông tin tham chiếu (`CreateUserReference`)
 - Lấy thông tin tham chiếu (`GetUserReference`)
 
+## API Controllers & Endpoints (v1)
+- `AuthController`
+  - POST `/api/v1/auth/register` – Đăng ký
+  - POST `/api/v1/auth/login` – Đăng nhập
+- `AccountController`
+  - GET `/api/v1/account/info` – Lấy thông tin người dùng (Authorize)
+- `LoanController`
+  - GET `/api/v1/loan/all-admin` – Danh sách khoản vay (Admin)
+  - GET `/api/v1/loan/all-user` – Khoản vay của người dùng
+  - GET `/api/v1/loan/info` – Chi tiết khoản vay
+  - POST `/api/v1/loan/create` – Tạo khoản vay
+  - POST `/api/v1/loan/review` – Duyệt khoản vay (Admin)
+- `UserReferenceController`
+  - POST `/api/v1/user-reference/create` – Tạo người tham chiếu
+  - GET `/api/v1/user-reference/get-all` – Danh sách người tham chiếu
+
 ## Cấu hình
 
 ### API Versioning

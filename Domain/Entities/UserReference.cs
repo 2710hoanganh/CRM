@@ -10,7 +10,7 @@ namespace Domain.Entities
         public string PhoneNumber { get; set; } = string.Empty;
         public int Relationship { get; set; }
         public int Status { get; set; }
-
+            
         public User User { get; set; } = null!;
     }
 }

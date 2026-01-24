@@ -34,8 +34,8 @@ HCRM/
 - **Chức năng**: Business Logic, CQRS Pattern với MediatR
 - **Cấu trúc Features**:
   - `User/` - Đăng ký, đăng nhập, lấy thông tin người dùng
-  - `Loan/` - Tạo khoản vay, duyệt khoản vay, lấy thông tin khoản vay
-  - `UserReference/` - Tạo và lấy thông tin tham chiếu người dùng
+  - `Loan/` - Tạo khoản vay, duyệt khoản vay, lấy thông tin khoản vay, danh sách khoản vay (admin/user), lịch trả nợ
+  - `UserReference/` - Tạo và lấy danh sách tham chiếu người dùng
 - **Công nghệ**: MediatR (CQRS)
 
 #### 3. **Infrastructure Layer**
@@ -46,6 +46,7 @@ HCRM/
   - `TokenService` - Tạo và xác thực JWT
   - `MappingService` - Object Mapping với AutoMapper
   - `LoanInterestRateService` - Tính toán lãi suất
+  - `DateTimeService` - Xử lý ngày giờ (IDateTimeService)
 - **Công nghệ**: AutoMapper, BCrypt, JWT, Redis
 
 #### 4. **Domain Layer**
@@ -55,13 +56,14 @@ HCRM/
   - `User` - Thông tin người dùng
   - `Loan` - Thông tin khoản vay
   - `UserReference` - Thông tin tham chiếu người dùng
+  - `UserRepayment` - Lịch trả nợ theo khoản vay
 - **Models**: DTOs cho các operations
 
 #### 5. **Persistence Layer**
 
 - **Chức năng**: Database Context, Repositories, Migrations
 - **Công nghệ**: Entity Framework Core 8.0, SQL Server
-- **Repositories**: Generic Repository Pattern
+- **Repositories**: Generic Repository Pattern, `UserRepaymentRepository`
 
 ## Công nghệ sử dụng
 
@@ -114,12 +116,15 @@ HCRM/
 
 - Tạo khoản vay (`CreateLoanCommand`)
 - Duyệt khoản vay (`ReviewLoanCommand`)
-- Lấy thông tin khoản vay (`GetLoanInfo`)
+- Lấy thông tin khoản vay (`GetLoanInfoQuery`)
+- Danh sách khoản vay admin (`GetAllLoanQuery`)
+- Danh sách khoản vay user (`GetAllUserLoanQuery`)
+- Lịch trả nợ theo khoản vay (`GetLoanRepaymentDateQuery`)
 
 ### User Reference Management
 
-- Tạo thông tin tham chiếu (`CreateUserReference`)
-- Lấy thông tin tham chiếu (`GetUserReference`)
+- Tạo thông tin tham chiếu (`CreateUserReferenceCommand`)
+- Danh sách tham chiếu người dùng (`GetUserReferenceQuery`)
 
 ## API Controllers & Endpoints (v1)
 - `AuthController`
@@ -131,6 +136,7 @@ HCRM/
   - GET `/api/v1/loan/all-admin` – Danh sách khoản vay (Admin)
   - GET `/api/v1/loan/all-user` – Khoản vay của người dùng
   - GET `/api/v1/loan/info` – Chi tiết khoản vay
+  - GET `/api/v1/loan/repayment` – Lịch trả nợ theo khoản vay (query: Id)
   - POST `/api/v1/loan/create` – Tạo khoản vay
   - POST `/api/v1/loan/review` – Duyệt khoản vay (Admin)
 - `UserReferenceController`

@@ -8,6 +8,7 @@ using Domain.Constants.AppEnum;
 using Domain.Models.DTO.Loan;
 using Application.Features.Loan.Command;
 using Presentation.DTOs;
+using Domain.Models.DTO.UserRepayment;
 
 namespace Presentation.Controllers
 {
@@ -68,6 +69,21 @@ namespace Presentation.Controllers
             {
                 Data = result.Data,
                 Message = result.Result == ResponseResult.SUCCESS ? "Loan info found" : "Loan info not found"
+            });
+        }
+
+        [HttpGet("repayment")]
+        public async Task<IActionResult> GetLoanRepaymentDate([FromQuery] BaseFieldsDto query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetLoanRepaymentDateQuery
+            {
+                Id = query.Id,
+            }, cancellationToken);
+                
+            return Ok(new Response<UserListRepayment>(ResponseResult.SUCCESS)
+            {
+                Data = result.Data,
+                Message = result.Result == ResponseResult.SUCCESS ? "Loan repayment dates retrieved successfully" : "Loan repayment dates not found"
             });
         }
 

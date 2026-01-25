@@ -6,6 +6,7 @@ using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Domain.Models.Common;
+using Infrastructure.Extensions.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,10 @@ builder.Services.AddApiVersioning(options =>
 });
 // Add Application (MediatR, etc.)
 builder.Services.AddApplication();
+
+// Configure RabbitMQ
+builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection("RabbitMQ"));
+builder.Services.AddSingleton<RabbitMqConsumer>();
 
 // Add Infrastructure (AutoMapper, External Services, etc.)
 builder.Services.AddInfrastructure();

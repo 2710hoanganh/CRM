@@ -10,7 +10,7 @@ Dự án được tổ chức theo mô hình **Clean Architecture** với các l
 
 ```
 HCRM/
-├── Presentation/          # Lớp Presentation - API Controllers, Middleware
+├── Presentation/          # Lớp Presentation - API Controllers, Extensions
 ├── Application/           # Lớp Application - Business Logic, CQRS
 ├── Infrastructure/        # Lớp Infrastructure - External Services, Mapping
 ├── Domain/                # Lớp Domain - Entities, DTOs, Constants
@@ -21,12 +21,15 @@ HCRM/
 
 #### 1. **Presentation Layer**
 
-- **Chức năng**: API Controllers, Middleware, Filters, Extensions
+- **Chức năng**: API Controllers, Extensions, DTOs
 - **Các controller**:
-  - `AccountController` - Quản lý tài khoản
-  - `AuthController` - Xác thực người dùng
+  - `AccountController` - Quản lý tài khoản người dùng
+  - `AuthController` - Xác thực người dùng (đăng ký, đăng nhập)
   - `LoanController` - Quản lý khoản vay
   - `UserReferenceController` - Quản lý thông tin tham chiếu người dùng
+- **Extensions**:
+  - `JWTExtension` - Cấu hình JWT Authentication
+  - `SwaggerExtension` - Cấu hình Swagger/OpenAPI
 - **Công nghệ**: ASP.NET Core Web API, Swagger, JWT Authentication
 
 #### 2. **Application Layer**
@@ -36,18 +39,25 @@ HCRM/
   - `User/` - Đăng ký, đăng nhập, lấy thông tin người dùng
   - `Loan/` - Tạo khoản vay, duyệt khoản vay, lấy thông tin khoản vay, danh sách khoản vay (admin/user), lịch trả nợ
   - `UserReference/` - Tạo và lấy danh sách tham chiếu người dùng
+- **Services Interfaces**:
+  - `IRabbitMqService` - Interface cho message queue
+  - `IRedisService` - Interface cho caching
 - **Công nghệ**: MediatR (CQRS)
 
 #### 3. **Infrastructure Layer**
 
-- **Chức năng**: External Services, AutoMapper, Token Services
+- **Chức năng**: External Services, AutoMapper, Token Services, Message Queue, Caching
 - **Các service**:
   - `HashingService` - Băm mật khẩu (BCrypt)
   - `TokenService` - Tạo và xác thực JWT
   - `MappingService` - Object Mapping với AutoMapper
   - `LoanInterestRateService` - Tính toán lãi suất
-  - `DateTimeService` - Xử lý ngày giờ (IDateTimeService)
-- **Công nghệ**: AutoMapper, BCrypt, JWT, Redis
+  - `DateTimeService` - Xử lý ngày giờ
+- **Extensions**:
+  - `RabbitMQ/` - RabbitMQ Connection, Consumer, Service
+  - `Redis/` - Redis caching service
+  - `Mappings/` - AutoMapper profiles (Loan, User, UserReference, UserRepayment)
+- **Công nghệ**: AutoMapper, BCrypt, JWT, Redis, RabbitMQ
 
 #### 4. **Domain Layer**
 
@@ -57,13 +67,15 @@ HCRM/
   - `Loan` - Thông tin khoản vay
   - `UserReference` - Thông tin tham chiếu người dùng
   - `UserRepayment` - Lịch trả nợ theo khoản vay
-- **Models**: DTOs cho các operations
+- **Models**:
+  - `Common/` - Response, Paging, Config models
+  - `DTO/` - Data Transfer Objects cho từng feature
 
 #### 5. **Persistence Layer**
 
 - **Chức năng**: Database Context, Repositories, Migrations
 - **Công nghệ**: Entity Framework Core 8.0, SQL Server
-- **Repositories**: Generic Repository Pattern, `UserRepaymentRepository`
+- **Repositories**: Generic Repository Pattern, UnitOfWork Pattern
 
 ## Công nghệ sử dụng
 
@@ -87,22 +99,27 @@ HCRM/
 
 - **Swashbuckle.AspNetCore (Swagger)** - API documentation
 - **Asp.Versioning** - API versioning support
-- **Microsoft.AspNetCore.Mvc.Versioning** - Versioning helpers
 
 ### Architecture Patterns
 
-- **MediatR 13.0** - CQRS Pattern implementation
-- **AutoMapper 12.0** - Object-to-object mapping
+- **MediatR** - CQRS Pattern implementation
+- **AutoMapper** - Object-to-object mapping
 - **Repository Pattern** - Data access abstraction
+- **Unit of Work Pattern** - Transaction management
+
+### Message Queue
+
+- **RabbitMQ** - Message broker cho async communication
+- **RabbitMQ.Client** - .NET client cho RabbitMQ
 
 ### Caching
 
-- **StackExchange.Redis** - Redis client (nếu cần caching)
+- **StackExchange.Redis** - Redis client cho distributed caching
 
 ### DevOps
 
-- **Docker** - Containerization (compose.yaml)
-- **Dockerfile** - Container configuration
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container orchestration
 
 ## Các tính năng chính
 
@@ -116,32 +133,49 @@ HCRM/
 
 - Tạo khoản vay (`CreateLoanCommand`)
 - Duyệt khoản vay (`ReviewLoanCommand`)
-- Lấy thông tin khoản vay (`GetLoanInfoQuery`)
-- Danh sách khoản vay admin (`GetAllLoanQuery`)
-- Danh sách khoản vay user (`GetAllUserLoanQuery`)
-- Lịch trả nợ theo khoản vay (`GetLoanRepaymentDateQuery`)
+- Lấy thông tin khoản vay (`GetLoanInfo`)
+- Danh sách khoản vay admin (`GetAllLoan`)
+- Danh sách khoản vay user (`GetAllUserLoan`)
+- Lịch trả nợ theo khoản vay (`GetLoanRepaymentDate`)
 
 ### User Reference Management
 
-- Tạo thông tin tham chiếu (`CreateUserReferenceCommand`)
-- Danh sách tham chiếu người dùng (`GetUserReferenceQuery`)
+- Tạo thông tin tham chiếu (`CreateUserReference`)
+- Danh sách tham chiếu người dùng (`GetUserReference`)
+
+### Caching & Message Queue
+
+- **Redis Caching**: Get, Set, Remove, Exists operations với TTL support
+- **RabbitMQ**: Publish/Subscribe pattern cho async messaging
 
 ## API Controllers & Endpoints (v1)
-- `AuthController`
-  - POST `/api/v1/auth/register` – Đăng ký
-  - POST `/api/v1/auth/login` – Đăng nhập
-- `AccountController`
-  - GET `/api/v1/account/info` – Lấy thông tin người dùng (Authorize)
-- `LoanController`
-  - GET `/api/v1/loan/all-admin` – Danh sách khoản vay (Admin)
-  - GET `/api/v1/loan/all-user` – Khoản vay của người dùng
-  - GET `/api/v1/loan/info` – Chi tiết khoản vay
-  - GET `/api/v1/loan/repayment` – Lịch trả nợ theo khoản vay (query: Id)
-  - POST `/api/v1/loan/create` – Tạo khoản vay
-  - POST `/api/v1/loan/review` – Duyệt khoản vay (Admin)
-- `UserReferenceController`
-  - POST `/api/v1/user-reference/create` – Tạo người tham chiếu
-  - GET `/api/v1/user-reference/get-all` – Danh sách người tham chiếu
+
+### AuthController
+| Method | Endpoint | Mô tả | Auth |
+|--------|----------|-------|------|
+| POST | `/api/v1/auth/register` | Đăng ký tài khoản | No |
+| POST | `/api/v1/auth/login` | Đăng nhập | No |
+
+### AccountController
+| Method | Endpoint | Mô tả | Auth |
+|--------|----------|-------|------|
+| GET | `/api/v1/account/info` | Lấy thông tin người dùng | Yes |
+
+### LoanController
+| Method | Endpoint | Mô tả | Auth |
+|--------|----------|-------|------|
+| GET | `/api/v1/loan/all-admin` | Danh sách khoản vay (Admin) | Yes |
+| GET | `/api/v1/loan/all-user` | Khoản vay của người dùng hiện tại | Yes |
+| GET | `/api/v1/loan/info` | Chi tiết khoản vay (query: Id) | Yes |
+| GET | `/api/v1/loan/repayment` | Lịch trả nợ theo khoản vay (query: Id) | Yes |
+| POST | `/api/v1/loan/create` | Tạo khoản vay mới | Yes |
+| POST | `/api/v1/loan/review` | Duyệt khoản vay (Admin) | Yes |
+
+### UserReferenceController
+| Method | Endpoint | Mô tả | Auth |
+|--------|----------|-------|------|
+| POST | `/api/v1/user-reference/create` | Tạo người tham chiếu | Yes |
+| GET | `/api/v1/user-reference/get-all` | Danh sách người tham chiếu | Yes |
 
 ## Cấu hình
 
@@ -153,13 +187,51 @@ HCRM/
 
 ### JWT Configuration
 
-- JWT được cấu hình trong `appsettings.json`
-- Bearer token authentication
+Cấu hình trong `appsettings.Development.json`:
+
+```json
+{
+  "JWT": {
+    "Key": "your-secret-key",
+    "Issuer": "your-issuer",
+    "Audience": "your-audience",
+    "ExpireMinutes": 60
+  }
+}
+```
 
 ### Database
 
-- SQL Server database
-- Entity Framework Migrations được sử dụng để quản lý schema
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=...;Database=HCRM;..."
+  }
+}
+```
+
+### RabbitMQ Configuration
+
+```json
+{
+  "RabbitMqConfig": {
+    "HostName": "localhost",
+    "UserName": "guest",
+    "Password": "guest",
+    "Port": 5672
+  }
+}
+```
+
+### Redis Configuration
+
+```json
+{
+  "RedisConfig": {
+    "ConnectionString": "localhost:6379"
+  }
+}
+```
 
 ## Development Setup
 
@@ -167,14 +239,44 @@ HCRM/
 
 - .NET 8.0 SDK
 - SQL Server
+- Redis Server (optional)
+- RabbitMQ Server (optional)
 - Visual Studio / JetBrains Rider / VS Code
 
 ### Chạy dự án
 
-1. Restore packages: `dotnet restore`
-2. Cập nhật database connection string trong `appsettings.json`
-3. Chạy migrations: `dotnet ef database update --project Persistence --startup-project Presentation`
-4. Chạy ứng dụng: `dotnet run --project Presentation`
+1. Clone repository:
+   ```bash
+   git clone <repository-url>
+   cd HCRM
+   ```
+
+2. Restore packages:
+   ```bash
+   dotnet restore
+   ```
+
+3. Cập nhật cấu hình trong `Presentation/appsettings.Development.json`:
+   - Connection string database
+   - JWT settings
+   - Redis connection (nếu sử dụng)
+   - RabbitMQ connection (nếu sử dụng)
+
+4. Chạy migrations:
+   ```bash
+   dotnet ef database update --project Persistence --startup-project Presentation
+   ```
+
+5. Chạy ứng dụng:
+   ```bash
+   dotnet run --project Presentation
+   ```
+
+### Chạy với Docker
+
+```bash
+docker-compose -f compose.yaml up --build
+```
 
 ### Swagger
 
@@ -186,33 +288,104 @@ HCRM/
 ```
 HCRM/
 ├── Application/
-│   ├── Features/              # CQRS Commands & Queries
+│   ├── Features/                    # CQRS Commands & Queries
 │   │   ├── Loan/
+│   │   │   ├── Command/             # CreateLoanCommand, ReviewLoanCommand
+│   │   │   └── Query/               # GetAllLoan, GetLoanInfo, GetLoanRepaymentDate
 │   │   ├── User/
+│   │   │   ├── Command/             # RegisterCommand
+│   │   │   └── Query/               # GetUserInfoQuery, LoginQuery
 │   │   └── UserReference/
-│   ├── Repositories/          # Repository Interfaces
-│   └── Services/              # Application Services
+│   │       ├── Command/             # CreateUserReference
+│   │       └── Query/               # GetUserReference
+│   ├── Repositories/                # Repository Interfaces
+│   │   ├── Base/                    # IBaseRepository, IUnitOfWork, etc.
+│   │   ├── ILoanRepository.cs
+│   │   ├── IUserRepository.cs
+│   │   ├── IUserReferenceRepository.cs
+│   │   └── IUserRepaymentRepository.cs
+│   └── Services/                    # Service Interfaces
+│       ├── Base/                    # IDateTimeService
+│       ├── IRabbitMqService.cs
+│       └── IRedisService.cs
 │
 ├── Domain/
-│   ├── Entities/              # Domain Entities
-│   ├── Models/                # DTOs, Common Models
-│   └── Constants/             # App Constants, Enums
+│   ├── Constants/                   # AppConstants, AppEnum
+│   ├── Entities/                    # User, Loan, UserReference, UserRepayment
+│   │   └── Base/                    # BaseEntity
+│   └── Models/
+│       ├── Common/                  # Response, Paging, Config models
+│       └── DTO/                     # Feature-specific DTOs
+│           ├── Loan/
+│           ├── User/
+│           ├── UserReference/
+│           └── UserRepayment/
 │
 ├── Infrastructure/
-│   ├── Services/              # External Services
-│   ├── Extensions/            # Extension Methods
-│   └── ScheduledJobs/         # Background Jobs
+│   ├── Services/                    # Service Implementations
+│   │   ├── DateTimeService.cs
+│   │   ├── HashingService.cs
+│   │   ├── LoanInterestRateService.cs
+│   │   ├── MappingService.cs
+│   │   └── TokenService.cs
+│   ├── Extensions/
+│   │   ├── Mappings/                # AutoMapper Profiles
+│   │   ├── RabbitMQ/                # RabbitMQ Connection, Consumer, Service
+│   │   └── Redis/                   # Redis Service
+│   └── DependencyInjection.cs
 │
 ├── Persistence/
-│   ├── Contexts/              # DbContext & Configurations
-│   ├── Repositories/          # Repository Implementations
-│   └── Migrations/            # EF Core Migrations
+│   ├── Contexts/                    # DbContext & Configurations
+│   ├── Repositories/                # Repository Implementations
+│   └── Migrations/                  # EF Core Migrations
 │
-└── Presentation/
-    ├── Controllers/           # API Controllers
-    ├── Extensions/            # Startup Extensions
-    ├── Filters/               # Action Filters
-    └── Middlewares/           # Custom Middlewares
+├── Presentation/
+│   ├── Controllers/                 # API Controllers
+│   ├── DTOs/                        # API-specific DTOs
+│   ├── Extensions/                  # JWT, Swagger Extensions
+│   ├── Program.cs                   # Application Entry Point
+│   └── appsettings.json             # Configuration
+│
+├── compose.yaml                     # Docker Compose configuration
+├── HCRM.sln                         # Solution file
+└── README.md
+```
+
+## Response Format
+
+API sử dụng format response chuẩn:
+
+```json
+{
+  "result": 1,
+  "data": { },
+  "message": "Success message"
+}
+```
+
+| Field | Type | Mô tả |
+|-------|------|-------|
+| result | int | Mã kết quả (SUCCESS = 1, ERROR = 0) |
+| data | object | Dữ liệu trả về |
+| message | string | Thông báo kết quả |
+
+## Pagination Response
+
+Các API danh sách sử dụng format phân trang:
+
+```json
+{
+  "result": 1,
+  "data": {
+    "items": [],
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalCount": 100,
+    "totalPages": 10,
+    "message": "Data retrieved successfully"
+  },
+  "message": "Success"
+}
 ```
 
 ## License

@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Domain.Models.Common;
 using Infrastructure.Extensions.RabbitMQ;
 using Hangfire;
+using Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,10 +104,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Hangfire (dashboard + recurring jobs qua abstraction — Clean Architecture)
+// Hangfire (dashboard + recurring jobs qua IRecurringJobRegistrar — Clean Architecture)
 app.UseHangfireDashboard("/hangfire");
-//test hangfire
-// HangFireService.RunHourlyJob();
+app.Services.GetRequiredService<IRecurringJobRegistrar>().RegisterRecurringJobs();
 // map controllers
 app.MapControllers();
 

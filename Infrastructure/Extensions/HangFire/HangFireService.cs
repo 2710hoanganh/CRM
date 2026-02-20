@@ -12,6 +12,35 @@ namespace Infrastructure.Extensions.HangFire
             return Task.CompletedTask;
         }
 
+        public Task EmailJob<T>(Expression<Func<T, Task>> job)
+        {
+            BackgroundJob.Enqueue(() => TestJob());
+            return Task.CompletedTask;
+        }
+
+        public Task ReminderLoanRepayment3DaysJob()
+        {
+            // Khi có IEmailService: RecurringJob.AddOrUpdate<IEmailService>("...", x => x.SendMailReminderLoanRepayment3Days(), "0 0 * * *");
+            RecurringJob.AddOrUpdate("reminder-loan-repayment-3-days", () => PlaceholderReminder3Days(), "0 0 * * *");
+            return Task.CompletedTask;
+        }
+
+        public Task ReminderLoanRepayment1DayJob()
+        {
+            RecurringJob.AddOrUpdate("reminder-loan-repayment-1-day", () => PlaceholderReminder1Day(), "0 0 * * *");
+            return Task.CompletedTask;
+        }
+
+        public Task ReminderLoanRepaymentLateHourJob()
+        {
+            RecurringJob.AddOrUpdate("reminder-loan-repayment-late-hour", () => PlaceholderReminderLateHour(), "0 13 * * *");
+            return Task.CompletedTask;
+        }
+
+        public static void PlaceholderReminder3Days() => Console.WriteLine("[Recurring] Reminder 3 days placeholder");
+        public static void PlaceholderReminder1Day() => Console.WriteLine("[Recurring] Reminder 1 day placeholder");
+        public static void PlaceholderReminderLateHour() => Console.WriteLine("[Recurring] Reminder late 1 hour placeholder");
+
         /// <summary>Đăng ký job chạy lặp theo cron. Cron: phút giờ ngày tháng thứ.</summary>
         public void AddRecurringJob(string jobId, Action job, string cronExpression)
         {

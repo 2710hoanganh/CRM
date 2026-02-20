@@ -7,6 +7,7 @@ using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Domain.Models.Common;
 using Infrastructure.Extensions.RabbitMQ;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,7 @@ builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection("Rab
 builder.Services.AddSingleton<RabbitMqConsumer>();
 
 // Add Infrastructure (AutoMapper, External Services, etc.)
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add Persistence (DbContext, Repositories, UnitOfWork)
 builder.Services.AddPersistence(builder.Configuration);
@@ -102,6 +103,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Hangfire (dashboard + recurring jobs qua abstraction — Clean Architecture)
+app.UseHangfireDashboard("/hangfire");
+//test hangfire
+// HangFireService.RunHourlyJob();
 // map controllers
 app.MapControllers();
 

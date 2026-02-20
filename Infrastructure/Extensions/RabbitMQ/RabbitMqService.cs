@@ -1,5 +1,4 @@
 using Application.Services;
-using Infrastructure.Extensions.RabbitMQ;
 using RabbitMQ.Client;
 using System.Text.Json;
 namespace Infrastructure.Extensions.RabbitMQ

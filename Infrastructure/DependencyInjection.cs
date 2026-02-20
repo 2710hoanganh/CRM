@@ -9,13 +9,32 @@ using Application.Services;
 using Domain.Models.Common;
 using StackExchange.Redis;
 using Infrastructure.Extensions.Redit;
+using Hangfire;
+using Hangfire.SqlServer;
+using Microsoft.Extensions.Configuration;
+using Infrastructure.Extensions.HangFire;
 
 namespace Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHangfire(sp =>
+                sp.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UseSqlServerStorage(
+                            configuration.GetConnectionString("BackgroundConnection"),
+                            new SqlServerStorageOptions
+                            {
+                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                QueuePollInterval = TimeSpan.Zero,
+                                UseRecommendedIsolationLevel = true,
+                                DisableGlobalLocks = true
+                            }));
+            services.AddHangfireServer();
             // Register RabbitMQ
             services.AddSingleton<Infrastructure.Extensions.RabbitMQ.RabbitMqConnection>(sp =>
                 RabbitMqConnection.CreateAsync(sp.GetRequiredService<IOptions<RabbitMqConfig>>().Value)
@@ -41,6 +60,11 @@ namespace Infrastructure
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoanInterestRate, LoanInterestRateService>();
             services.AddScoped<IDateTimeService, DateTimeService>();
+
+            // Register HangFire Service
+            services.AddScoped<IHangFireService, HangFireService>();
+            // Đăng ký recurring jobs (Clean Arch: Presentation chỉ gọi IRecurringJobRegistrar)
+            services.AddSingleton<IRecurringJobRegistrar, RecurringJobRegistrar>();
             return services;
         }
     }

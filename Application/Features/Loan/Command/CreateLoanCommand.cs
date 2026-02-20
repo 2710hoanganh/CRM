@@ -56,18 +56,23 @@ namespace Application.Features.Loan.Command
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                         // create repatment plan base on term 
-                        List<UserRepayment> userRepayments = new List<UserRepayment>();
-                        for (int i = 0; i < request.Request.LoanTerm; i++)
+                        _ = Task.Run(async () =>
                         {
-                            var item = new UserRepayment
+                            List<UserRepayment> userRepayments = new List<UserRepayment>();
+                            for (int i = 0; i < request.Request.LoanTerm; i++)
                             {
-                                LoanId = loan.Id,
-                                RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i, cancellationToken),
-                                Status = (int)UserRepatmentStatus.Pending,
-                            };
-                            userRepayments.Add(item);
-                        }
-                        await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
+                                var item = new UserRepayment
+                                {
+                                    LoanId = loan.Id,
+                                    RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i + 1, cancellationToken),
+                                    Status = (int)UserRepatmentStatus.Pending,
+                                };
+                                userRepayments.Add(item);
+                            }
+                            await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
+                            await _unitOfWork.SaveChangesAsync(cancellationToken);
+                        });
+
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
                         await _unitOfWork.CommitTransactionAsync(transactionId: transaction, cancellationToken);
                     }

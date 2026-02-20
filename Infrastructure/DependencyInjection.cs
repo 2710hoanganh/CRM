@@ -20,12 +20,15 @@ namespace Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            var hangfireConn = configuration.GetConnectionString("BackgroundConnection");
+            HangfireDatabaseEnsurer.EnsureHangfireDatabaseExists(hangfireConn ?? "");
+
             services.AddHangfire(sp =>
                 sp.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
                     .UseSqlServerStorage(
-                            configuration.GetConnectionString("BackgroundConnection"),
+                            hangfireConn,
                             new SqlServerStorageOptions
                             {
                                 CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),

@@ -14,13 +14,21 @@ namespace Persistence.DependencyInjection
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName);
 
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(5),
+                            errorNumbersToAdd: null);
+                    }));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserReferenceRepository, UserReferenceRepository>();
-            services.AddScoped<ILoanRepository, LoanRepository>(); 
+            services.AddScoped<ILoanRepository, LoanRepository>();
             services.AddScoped<IUserRepaymentRepository, UserRepaymentRepository>();
             return services;
         }

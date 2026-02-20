@@ -1,32 +1,10 @@
-﻿version: '3.8'
+version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Presentation/Dockerfile
-    container_name: clean-app
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:5000
-      - ConnectionStrings__DefaultConnection=${DB_CONNECTION}
-      - ConnectionStrings__BackgroundConnection=${HF_CONNECTION}
-      - Redis__Connection=redis:6379
-      - RabbitMQ__Host=rabbitmq
-      - RabbitMQ__Username=guest
-      - RabbitMQ__Password=guest
-    ports:
-      - "5000:5000"
-    depends_on:
-      - db
-      - redis
-      - rabbitmq
-    networks:
-      - app-network
-
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
+    # SQL Server cần ~10–30s mới sẵn sàng; app tự retry kết nối (Hangfire + Migrate)
     environment:
       - SA_PASSWORD=${SA_PASSWORD}
       - ACCEPT_EULA=Y
@@ -51,6 +29,30 @@ services:
     ports:
       - "5672:5672"     # app connect
       - "15672:15672"   # UI
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Presentation/Dockerfile
+    container_name: clean-app
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION}
+      - ConnectionStrings__BackgroundConnection=${HF_CONNECTION}
+      - Redis__Connection=redis:6379
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
     networks:
       - app-network
 

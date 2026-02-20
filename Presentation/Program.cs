@@ -9,6 +9,8 @@ using Domain.Models.Common;
 using Infrastructure.Extensions.RabbitMQ;
 using Hangfire;
 using Application.Services;
+using Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,6 +82,27 @@ builder.Services.Configure<JWT>(
     builder.Configuration.GetSection("Jwt"));
 
 var app = builder.Build();
+
+// Đợi SQL sẵn sàng rồi mới Migrate (Docker compose: db container start trước nhưng SQL chưa listen ngay)
+const int maxMigrateRetries = 15;
+const int migrateRetryDelayMs = 3000;
+for (var attempt = 1; attempt <= maxMigrateRetries; attempt++)
+{
+    try
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.Migrate();
+        }
+        break;
+    }
+    catch (Exception)
+    {
+        if (attempt == maxMigrateRetries) throw;
+        Thread.Sleep(migrateRetryDelayMs);
+    }
+}
 
 //Swagger
 // if is development, use swagger

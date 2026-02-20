@@ -42,6 +42,8 @@ HCRM/
 - **Services Interfaces**:
   - `IRabbitMqService` - Interface cho message queue
   - `IRedisService` - Interface cho caching
+  - `IHangFireService` - Interface cho background/recurring jobs (Enqueue, Schedule, Recurring)
+  - `IRecurringJobRegistrar` - Đăng ký recurring jobs khi startup (Clean Architecture)
 - **Công nghệ**: MediatR (CQRS)
 
 #### 3. **Infrastructure Layer**
@@ -56,8 +58,9 @@ HCRM/
 - **Extensions**:
   - `RabbitMQ/` - RabbitMQ Connection, Consumer, Service
   - `Redis/` - Redis caching service
-  - `Mappings/` - AutoMapper profiles (Loan, User, UserReference, UserRepayment)
-- **Công nghệ**: AutoMapper, BCrypt, JWT, Redis, RabbitMQ
+  - `HangFire/` - Hangfire Service, RecurringJobRegistrar, HangfireDatabaseEnsurer (tự tạo DB Hangfire nếu chưa có)
+- **Mappings**: AutoMapper profiles (Loan, User, UserReference, UserRepayment)
+- **Công nghệ**: AutoMapper, BCrypt, JWT, Redis, RabbitMQ, Hangfire (SQL Server storage)
 
 #### 4. **Domain Layer**
 
@@ -116,6 +119,12 @@ HCRM/
 
 - **StackExchange.Redis** - Redis client cho distributed caching
 
+### Background Jobs
+
+- **Hangfire** - Background jobs (Enqueue, Schedule, Recurring) với SQL Server storage
+- **Hangfire.SqlServer** - Persistence cho job queue
+- Tự tạo database Hangfire khi chưa có (kèm retry khi chạy Docker Compose)
+
 ### DevOps
 
 - **Docker** - Containerization
@@ -147,6 +156,12 @@ HCRM/
 
 - **Redis Caching**: Get, Set, Remove, Exists operations với TTL support
 - **RabbitMQ**: Publish/Subscribe pattern cho async messaging
+
+### Background Jobs (Hangfire)
+
+- **Recurring jobs**: Đăng ký khi startup qua `IRecurringJobRegistrar` (test-hourly, reminder trả nợ 3 ngày/1 ngày/trễ 1 giờ)
+- **Dashboard**: `https://localhost:{port}/hangfire` (Development)
+- Enqueue (chạy ngay), Schedule (chạy sau delay), Recurring (theo cron)
 
 ## API Controllers & Endpoints (v1)
 
@@ -187,15 +202,15 @@ HCRM/
 
 ### JWT Configuration
 
-Cấu hình trong `appsettings.Development.json`:
+Cấu hình trong `appsettings.Development.json` (section `Jwt`):
 
 ```json
 {
-  "JWT": {
+  "Jwt": {
+    "Issuer": "https://localhost:5001",
+    "Audience": "https://localhost:5001",
     "Key": "your-secret-key",
-    "Issuer": "your-issuer",
-    "Audience": "your-audience",
-    "ExpireMinutes": 60
+    "ExpiresIn": 30
   }
 }
 ```
@@ -205,20 +220,24 @@ Cấu hình trong `appsettings.Development.json`:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=...;Database=HCRM;..."
+    "DefaultConnection": "Server=...;Database=HCRM;User Id=sa;Password=...;TrustServerCertificate=True",
+    "BackgroundConnection": "Server=...;Database=Hangfire;User Id=sa;Password=...;TrustServerCertificate=True"
   }
 }
 ```
+
+- **DefaultConnection**: Database ứng dụng (HCRM). EF Core Migrations tạo bảng.
+- **BackgroundConnection**: Database Hangfire. Ứng dụng tự tạo database nếu chưa có (Hangfire tạo bảng).
 
 ### RabbitMQ Configuration
 
 ```json
 {
-  "RabbitMqConfig": {
-    "HostName": "localhost",
-    "UserName": "guest",
-    "Password": "guest",
-    "Port": 5672
+  "RabbitMQ": {
+    "Host": "localhost",
+    "Port": 5672,
+    "Username": "guest",
+    "Password": "guest"
   }
 }
 ```
@@ -227,8 +246,10 @@ Cấu hình trong `appsettings.Development.json`:
 
 ```json
 {
-  "RedisConfig": {
-    "ConnectionString": "localhost:6379"
+  "Redis": {
+    "ConnectionString": "localhost:6379",
+    "InstanceName": "Default",
+    "KeyPrefix": "HCRM:"
   }
 }
 ```
@@ -257,12 +278,11 @@ Cấu hình trong `appsettings.Development.json`:
    ```
 
 3. Cập nhật cấu hình trong `Presentation/appsettings.Development.json`:
-   - Connection string database
-   - JWT settings
-   - Redis connection (nếu sử dụng)
-   - RabbitMQ connection (nếu sử dụng)
+   - `ConnectionStrings:DefaultConnection`, `ConnectionStrings:BackgroundConnection` (Hangfire)
+   - `Jwt`: Issuer, Audience, Key, ExpiresIn
+   - `Redis`, `RabbitMQ` (nếu sử dụng)
 
-4. Chạy migrations:
+4. (Tùy chọn) Chạy migrations thủ công; hoặc để app tự chạy khi start:
    ```bash
    dotnet ef database update --project Persistence --startup-project Presentation
    ```
@@ -272,16 +292,40 @@ Cấu hình trong `appsettings.Development.json`:
    dotnet run --project Presentation
    ```
 
-### Chạy với Docker
+### Chạy với Docker Compose
 
-```bash
-docker-compose -f compose.yaml up --build
-```
+1. Tạo file `.env` ở thư mục gốc (cùng cấp `compose.yaml`):
 
-### Swagger
+   ```env
+   SA_PASSWORD=YourStrongPassword
+   DB_CONNECTION=Server=db,1433;Database=HCRM;User Id=sa;Password=YourStrongPassword;TrustServerCertificate=True
+   HF_CONNECTION=Server=db,1433;Database=Hangfire;User Id=sa;Password=YourStrongPassword;TrustServerCertificate=True
+   ```
 
-- Swagger UI chỉ hoạt động trong môi trường Development
-- Truy cập: `https://localhost:{port}/swagger`
+2. Chạy:
+
+   ```bash
+   docker compose -f compose.yaml up --build
+   ```
+
+3. Ứng dụng tự:
+   - **Retry** kết nối SQL (tối đa 15 lần, mỗi 3 giây) vì SQL Server trong container cần ~10–30s mới sẵn sàng.
+   - Tạo database **Hangfire** nếu chưa có (Hangfire sau đó tự tạo bảng).
+   - Chạy **EF Core Migrate** cho database **HCRM** (tạo DB + bảng nếu chưa có).
+
+**Ports:**
+
+| Service   | Port  | Ghi chú           |
+|----------|-------|-------------------|
+| app      | 5000  | API               |
+| SQL Server | 1433 | DB                |
+| Redis    | 6379  | Cache             |
+| RabbitMQ | 5672 (AMQP), 15672 (UI) | Message queue |
+
+### Swagger & Hangfire Dashboard
+
+- **Swagger**: Chỉ bật trong Development — `https://localhost:5000/swagger`
+- **Hangfire Dashboard**: `https://localhost:5000/hangfire` (xem recurring/scheduled jobs)
 
 ## Cấu trúc thư mục chi tiết
 
@@ -305,9 +349,11 @@ HCRM/
 │   │   ├── IUserReferenceRepository.cs
 │   │   └── IUserRepaymentRepository.cs
 │   └── Services/                    # Service Interfaces
-│       ├── Base/                    # IDateTimeService
+│       ├── Base/                    # IDateTimeService, ...
 │       ├── IRabbitMqService.cs
-│       └── IRedisService.cs
+│       ├── IRedisService.cs
+│       ├── IHangFireService.cs
+│       └── IRecurringJobRegistrar.cs
 │
 ├── Domain/
 │   ├── Constants/                   # AppConstants, AppEnum
@@ -331,7 +377,9 @@ HCRM/
 │   ├── Extensions/
 │   │   ├── Mappings/                # AutoMapper Profiles
 │   │   ├── RabbitMQ/                # RabbitMQ Connection, Consumer, Service
-│   │   └── Redis/                   # Redis Service
+│   │   ├── Redis/                   # Redis Service
+│   │   └── HangFire/                # HangFireService, RecurringJobRegistrar, HangfireDatabaseEnsurer
+│   ├── ApplicationBuilderExtensions.cs   # UseHangfireDashboard (Clean Arch)
 │   └── DependencyInjection.cs
 │
 ├── Persistence/

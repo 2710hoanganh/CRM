@@ -82,4 +82,12 @@ namespace Domain.Constants.AppEnum
         Overdue = 2,
         Paid = 3
     }
+
+    public enum NotificationType
+    {
+        Loan = 0,
+        Payment = 1,
+        Reminder = 2,
+        Other = 3
+    }
 }

@@ -19,20 +19,29 @@ namespace Application.Features.Loan.Command
             private readonly ILoanRepository _loanRepository;
             private readonly ILoanInterestRate _loanInterestRate;
             private readonly IUserRepaymentRepository _userRepaymentRepository;
+            private readonly IUserReferenceRepository _userReferenceRepository;
             private readonly IDateTimeService _dateTimeService;
-            public CreateLoanCommandHandler(IUnitOfWork unitOfWork, ILoanRepository loanRepository, ILoanInterestRate loanInterestRate, IUserRepaymentRepository userRepaymentRepository, IDateTimeService dateTimeService)
+            public CreateLoanCommandHandler(IUnitOfWork unitOfWork, ILoanRepository loanRepository, ILoanInterestRate loanInterestRate, IUserRepaymentRepository userRepaymentRepository, IDateTimeService dateTimeService, IUserReferenceRepository userReferenceRepository)
             {
                 _unitOfWork = unitOfWork;
                 _loanRepository = loanRepository;
                 _loanInterestRate = loanInterestRate;
                 _userRepaymentRepository = userRepaymentRepository;
                 _dateTimeService = dateTimeService;
+                _userReferenceRepository = userReferenceRepository;
             }
 
             public async Task<Response<bool>> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
+                    // check user ref berfor create loan
+                    var userRef = await _userReferenceRepository.Find(x => x.UserId == request.Id, include: null, asNoTracking: true, cancellationToken: cancellationToken);
+                    if (!userRef)
+                    {
+                        return new Response<bool>(ResponseResult.ERROR, "User have to add at least two references", false, null);
+                    }
+
                     var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)LoanRate.BaseRate, cancellationToken);
                     var total = await _loanInterestRate.CalculateTotal(request.Request.LoanAmount, request.Request.LoanTerm, interestRate, cancellationToken);
 

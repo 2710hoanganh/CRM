@@ -90,4 +90,10 @@ namespace Domain.Constants.AppEnum
         Reminder = 2,
         Other = 3
     }
+
+    public enum Queue
+    {
+        CreateNotification = 0,
+        ConsumeNotification = 1,
+    }
 }

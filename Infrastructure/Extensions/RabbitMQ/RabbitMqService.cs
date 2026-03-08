@@ -22,10 +22,13 @@ namespace Infrastructure.Extensions.RabbitMQ
                                                 autoDelete: false,
                                                 arguments: null);
                 var body = JsonSerializer.SerializeToUtf8Bytes(message);
+                var props = new BasicProperties { Persistent = true };
 
-                await channel.BasicPublishAsync(exchange: exchange ?? "",
-                                                routingKey: routingKey,
-                                                body: body);
+                await channel.BasicPublishAsync(exchange ?? "",
+                                                routingKey,
+                                                false,
+                                                props,
+                                                new ReadOnlyMemory<byte>(body));
             }
             catch (Exception)
             {

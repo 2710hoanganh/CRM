@@ -63,11 +63,16 @@ namespace Infrastructure
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ILoanInterestRate, LoanInterestRateService>();
             services.AddScoped<IDateTimeService, DateTimeService>();
+            services.AddScoped<IPenaltyCalculationService, PenaltyCalculationService>();
+            services.AddScoped<IVNPayService, VNPayService>();
 
             // Register HangFire Service
             services.AddScoped<IHangFireService, HangFireService>();
             // Đăng ký recurring jobs (Clean Arch: Presentation chỉ gọi IRecurringJobRegistrar)
             services.AddSingleton<IRecurringJobRegistrar, RecurringJobRegistrar>();
+
+            services.Configure<VNPayConfig>(configuration.GetSection("VNPay"));
+
             return services;
         }
     }

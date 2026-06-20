@@ -4,7 +4,6 @@ using Domain.Models.DTO.Loan;
 using Application.Repositories.Base;
 using Application.Repositories;
 using Domain.Constants.AppEnum;
-using Domain.Entities;
 using Application.Services.Base;
 
 namespace Application.Features.Loan.Command
@@ -64,21 +63,7 @@ namespace Application.Features.Loan.Command
                         await _loanRepository.Add(loan, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                        // create repayment plan base on term 
-                        List<UserRepayment> userRepayments = new List<UserRepayment>();
-                        for (int i = 0; i < request.Request.LoanTerm; i++)
-                        {
-                            var item = new UserRepayment
-                            {
-                                LoanId = loan.Id,
-                                RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i + 1, cancellationToken),
-                                Status = (int)UserRepatmentStatus.Pending,
-                            };
-                            userRepayments.Add(item);
-                        }
-                        await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
                         await _unitOfWork.CommitTransactionAsync(transactionId: transaction, cancellationToken);
                     }
                     catch (System.Exception)

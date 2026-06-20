@@ -25,6 +25,8 @@ namespace Infrastructure.Extensions.HangFire
             hangFire.ReminderLoanRepayment3DaysJob();
             hangFire.ReminderLoanRepayment1DayJob();
             hangFire.ReminderLoanRepaymentLateHourJob();
+            
+            RecurringJob.AddOrUpdate<IPenaltyCalculationService>("daily-overdue-processor", x => x.ProcessOverdueRepaymentsAsync(CancellationToken.None), "0 0 * * *");
         }
     }
 }

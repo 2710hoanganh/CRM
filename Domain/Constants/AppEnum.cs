@@ -45,8 +45,20 @@ namespace Domain.Constants.AppEnum
         Pending = 0,
         Approved = 1,
         Rejected = 2,
-        Paid = 3,
-        Cancelled = 4,
+        Disbursing = 3,
+        Active = 4,
+        Completed = 5,
+        BadDebt = 6,
+        Cancelled = 7,
+        Overdue = 8
+    }
+
+    public enum TransactionType
+    {
+        Disbursement = 0,
+        Repayment = 1,
+        EarlySettlement = 2,
+        PenaltyFee = 3
     }
 
     public enum UserLoanStatus
@@ -80,7 +92,8 @@ namespace Domain.Constants.AppEnum
         Pending = 0,
         Due = 1,
         Overdue = 2,
-        Paid = 3
+        Paid = 3,
+        Partial = 4
     }
 
     public enum NotificationType

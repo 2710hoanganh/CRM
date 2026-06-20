@@ -30,7 +30,7 @@ namespace Application.Features.User.Command
                     var isExist = await _userRepository.Find(x => x.Email == request.Request.Email, null, false, cancellationToken);
                     if (isExist == true)
                     {
-                        return new Response<RegisterModelResponse>(ResponseResult.ERROR, "Email already exists", null, null);
+                        return new Response<RegisterModelResponse>(ResponseResult.ERROR, Domain.Constants.Error.EmailExists, null, null);
                     }
 
                     var user = new Domain.Entities.User

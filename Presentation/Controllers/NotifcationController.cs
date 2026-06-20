@@ -32,10 +32,11 @@ namespace Presentation.Controllers
                 PageSize = query.PageSize
             }, cancellationToken);
 
-            return Ok(new Response<List<NotficationList>>(ResponseResult.SUCCESS)
+            return Ok(new Response<List<NotficationList>>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Message
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Notifications fetched successfully" : Domain.Constants.Error.NotificationsFetchFailed),
+                Errors = result.Errors
             });
         }
     }

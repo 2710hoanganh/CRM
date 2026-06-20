@@ -39,7 +39,7 @@ namespace Application.Features.Loan.Command
                     var userRef = await _userReferenceRepository.Find(x => x.UserId == request.Id, include: null, asNoTracking: true, cancellationToken: cancellationToken);
                     if (!userRef)
                     {
-                        return new Response<bool>(ResponseResult.ERROR, "User have to add at least two references", false, null);
+                        return new Response<bool>(ResponseResult.ERROR, Domain.Constants.Error.ReferenceRequired, false, null);
                     }
 
                     var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)LoanRate.BaseRate, cancellationToken);
@@ -64,25 +64,21 @@ namespace Application.Features.Loan.Command
                         await _loanRepository.Add(loan, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                        // create repatment plan base on term 
-                        _ = Task.Run(async () =>
+                        // create repayment plan base on term 
+                        List<UserRepayment> userRepayments = new List<UserRepayment>();
+                        for (int i = 0; i < request.Request.LoanTerm; i++)
                         {
-                            List<UserRepayment> userRepayments = new List<UserRepayment>();
-                            for (int i = 0; i < request.Request.LoanTerm; i++)
+                            var item = new UserRepayment
                             {
-                                var item = new UserRepayment
-                                {
-                                    LoanId = loan.Id,
-                                    RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i + 1, cancellationToken),
-                                    Status = (int)UserRepatmentStatus.Pending,
-                                };
-                                userRepayments.Add(item);
-                            }
-                            await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
-                            await _unitOfWork.SaveChangesAsync(cancellationToken);
-                        });
-
+                                LoanId = loan.Id,
+                                RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i + 1, cancellationToken),
+                                Status = (int)UserRepatmentStatus.Pending,
+                            };
+                            userRepayments.Add(item);
+                        }
+                        await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
                         await _unitOfWork.CommitTransactionAsync(transactionId: transaction, cancellationToken);
                     }
                     catch (System.Exception)

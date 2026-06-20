@@ -26,6 +26,7 @@ HCRM/
   - `AccountController` - Quản lý tài khoản người dùng
   - `AuthController` - Xác thực người dùng (đăng ký, đăng nhập)
   - `LoanController` - Quản lý khoản vay
+  - `NotifcationController` - Quản lý thông báo người dùng
   - `UserReferenceController` - Quản lý thông tin tham chiếu người dùng
 - **Extensions**:
   - `JWTExtension` - Cấu hình JWT Authentication
@@ -38,6 +39,7 @@ HCRM/
 - **Cấu trúc Features**:
   - `User/` - Đăng ký, đăng nhập, lấy thông tin người dùng
   - `Loan/` - Tạo khoản vay, duyệt khoản vay, lấy thông tin khoản vay, danh sách khoản vay (admin/user), lịch trả nợ
+  - `Notification/` - Lấy danh sách thông báo
   - `UserReference/` - Tạo và lấy danh sách tham chiếu người dùng
 - **Services Interfaces**:
   - `IRabbitMqService` - Interface cho message queue
@@ -68,6 +70,7 @@ HCRM/
 - **Entities**:
   - `User` - Thông tin người dùng
   - `Loan` - Thông tin khoản vay
+  - `Notification` - Thông tin thông báo
   - `UserReference` - Thông tin tham chiếu người dùng
   - `UserRepayment` - Lịch trả nợ theo khoản vay
 - **Models**:
@@ -147,6 +150,10 @@ HCRM/
 - Danh sách khoản vay user (`GetAllUserLoan`)
 - Lịch trả nợ theo khoản vay (`GetLoanRepaymentDate`)
 
+### Notification Management
+
+- Lấy danh sách thông báo (`ListNoitifiactionQuery`)
+
 ### User Reference Management
 
 - Tạo thông tin tham chiếu (`CreateUserReference`)
@@ -185,6 +192,11 @@ HCRM/
 | GET | `/api/v1/loan/repayment` | Lịch trả nợ theo khoản vay (query: Id) | Yes |
 | POST | `/api/v1/loan/create` | Tạo khoản vay mới | Yes |
 | POST | `/api/v1/loan/review` | Duyệt khoản vay (Admin) | Yes |
+
+### NotifcationController
+| Method | Endpoint | Mô tả | Auth |
+|--------|----------|-------|------|
+| GET | `/api/v1/notification/list` | Danh sách thông báo | Yes |
 
 ### UserReferenceController
 | Method | Endpoint | Mô tả | Auth |
@@ -336,6 +348,8 @@ HCRM/
 │   │   ├── Loan/
 │   │   │   ├── Command/             # CreateLoanCommand, ReviewLoanCommand
 │   │   │   └── Query/               # GetAllLoan, GetLoanInfo, GetLoanRepaymentDate
+│   │   ├── Notification/
+│   │   │   └── Query/               # ListNoitifiactionQuery
 │   │   ├── User/
 │   │   │   ├── Command/             # RegisterCommand
 │   │   │   └── Query/               # GetUserInfoQuery, LoginQuery
@@ -345,6 +359,7 @@ HCRM/
 │   ├── Repositories/                # Repository Interfaces
 │   │   ├── Base/                    # IBaseRepository, IUnitOfWork, etc.
 │   │   ├── ILoanRepository.cs
+│   │   ├── INotificationReposictory.cs
 │   │   ├── IUserRepository.cs
 │   │   ├── IUserReferenceRepository.cs
 │   │   └── IUserRepaymentRepository.cs
@@ -357,12 +372,13 @@ HCRM/
 │
 ├── Domain/
 │   ├── Constants/                   # AppConstants, AppEnum
-│   ├── Entities/                    # User, Loan, UserReference, UserRepayment
+│   ├── Entities/                    # User, Loan, Notification, UserReference, UserRepayment
 │   │   └── Base/                    # BaseEntity
 │   └── Models/
 │       ├── Common/                  # Response, Paging, Config models
 │       └── DTO/                     # Feature-specific DTOs
 │           ├── Loan/
+│           ├── Notification/
 │           ├── User/
 │           ├── UserReference/
 │           └── UserRepayment/

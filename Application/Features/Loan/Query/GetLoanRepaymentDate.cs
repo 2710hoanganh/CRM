@@ -27,7 +27,7 @@ namespace Application.Features.Loan.Query
                     var loan = await _loanRepository.GetOne(x => x.Id == request.Id, null, null, cancellationToken);
                     if (loan == null)
                     {
-                        return new Response<UserListRepayment>(ResponseResult.NOT_FOUND, "Loan not found", null, null);
+                        return new Response<UserListRepayment>(ResponseResult.NOT_FOUND, Domain.Constants.Error.LoanNotFound, null, null);
                     }
                     var userRepayments = _userRepaymentRepository.Get(
                         x => x.LoanId == request.Id,

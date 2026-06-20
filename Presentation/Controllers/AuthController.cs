@@ -28,7 +28,7 @@ namespace Presentation.Controllers
             return Ok(new Response<RegisterModelResponse>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "User registered successfully" : "User registered failed"),
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "User registered successfully" : Domain.Constants.Error.UserRegisterFailed),
                 Errors = result.Errors
             });
         }
@@ -41,7 +41,7 @@ namespace Presentation.Controllers
             return Ok(new Response<LoginResponse>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Login successful" : "Login failed"),
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Login successful" : Domain.Constants.Error.LoginFailed),
                 Errors = result.Errors
             });
         }

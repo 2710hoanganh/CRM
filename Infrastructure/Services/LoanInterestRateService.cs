@@ -48,7 +48,7 @@ namespace Infrastructure.Services
         {
             // risk factor base on loan term
             if (months < 1)
-                throw new ArgumentException("Loan term must be >= 1 month");
+                throw new ArgumentException(Domain.Constants.Error.LoanTermInvalid);
             // risk factor = 1 + risk step * (months - 1)
             return 1 + AppConstants.RiskStep * (months - 1);
         }

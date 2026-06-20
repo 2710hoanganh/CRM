@@ -43,7 +43,7 @@ namespace Application.Features.User.Query
 
                     if (await _hashPassword.VerifyPassword(request.Request.Password, user.PasswordHash) == false)
                     {
-                        return new Response<LoginResponse>(ResponseResult.ERROR, "Invalid password", null, null);
+                        return new Response<LoginResponse>(ResponseResult.ERROR, "Email or password is incorrect", null, null);
                     }
 
                     // current flow refresh token is not expired

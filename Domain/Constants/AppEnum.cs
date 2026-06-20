@@ -9,8 +9,8 @@ namespace Domain.Constants.AppEnum
 
     public enum ResponseResult
     {
-        SUCCESS = 0,
-        ERROR = 1,
+        ERROR = 0,
+        SUCCESS = 1,
         VALIDATION_ERROR = 2,
         NOT_FOUND = 3,
         UNAUTHORIZED = 4,

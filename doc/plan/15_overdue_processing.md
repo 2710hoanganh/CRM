@@ -22,3 +22,10 @@ Hệ thống tự động tính toán tiền phạt cho các khoản vay quá h�
 ## 4. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Tính lãi phạt chính xác**: Cung cấp đầu vào là số ngày quá hạn, nợ gốc và lãi suất, kiểm tra output của `PenaltyCalculationService`.
 - **TC2: Job tính phạt hàng ngày**: Giả lập dữ liệu `UserRepayment` trễ hạn, chạy trigger thủ công job `DailyOverdueProcessorJob` và kiểm tra database xem `PenaltyAmount` và `Status` của `Loan` có cập nhật đúng không.
+
+## 5. Cấu trúc mã nguồn chi tiết
+- **Application Layer**:
+  - [IPenaltyCalculationService.cs](file:///d:/CRM/Application/Services/IPenaltyCalculationService.cs)
+- **Infrastructure Layer**:
+  - [PenaltyCalculationService.cs](file:///d:/CRM/Infrastructure/Services/PenaltyCalculationService.cs)
+  - [RecurringJobRegistrar.cs](file:///d:/CRM/Infrastructure/Extensions/HangFire/RecurringJobRegistrar.cs)

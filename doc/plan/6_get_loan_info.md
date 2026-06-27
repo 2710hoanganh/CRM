@@ -19,15 +19,13 @@ Tính năng cho phép người dùng hoặc Admin lấy thông tin chi tiết c�
         "id": 1,
         "amount": 10000000,
         "term": 12,
-        "rate": 0,
-        "interestRate": 10,
-        "status": 0,
         "total": 11000000,
         "paybackAmount": 916666.67,
         "feedBack": "",
-        "createdDate": "2026-06-20T19:12:00"
+        "endDate": "2027-06-20T19:12:00",
+        "status": 0
       },
-      "message": "Loan info found"
+      "message": "Loan found"
     }
     ```
   - Thất bại:
@@ -55,12 +53,12 @@ Tính năng cho phép người dùng hoặc Admin lấy thông tin chi tiết c�
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [LoanController.cs](file:///D:/CRM/Presentation/Controllers/LoanController.cs)
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs)
 - **Application Layer**:
-  - [GetLoanInfo.cs](file:///D:/CRM/Application/Features/Loan/Query/GetLoanInfo.cs)
-  - `GetLoanInfoResponse` trong [Domain/Models/DTO/Loan](file:///D:/CRM/Domain/Models/DTO/Loan)
+  - [GetLoanInfo.cs](file:///d:/CRM/Application/Features/Loan/Query/GetLoanInfo.cs)
+  - `GetLoanInfoResponse` trong [Domain/Models/DTO/Loan](file:///d:/CRM/Domain/Models/DTO/Loan)
 - **Persistence Layer**:
-  - [LoanRepository.cs](file:///D:/CRM/Persistence/Repositories/LoanRepository.cs)
+  - [LoanRepository.cs](file:///d:/CRM/Persistence/Repositories/LoanRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy chi tiết thành công** khi cung cấp ID khoản vay hợp lệ đang có sẵn trong DB.

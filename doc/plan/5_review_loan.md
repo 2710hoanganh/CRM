@@ -51,12 +51,12 @@ Tính năng cho phép Quản trị viên (Admin) xem xét và phê duyệt hoặ
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [LoanController.cs](file:///D:/CRM/Presentation/Controllers/LoanController.cs)
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs)
 - **Application Layer**:
-  - [ReviewLoanCommand.cs](file:///D:/CRM/Application/Features/Loan/Command/ReviewLoanCommand.cs)
+  - [ReviewLoanCommand.cs](file:///d:/CRM/Application/Features/Loan/Command/ReviewLoanCommand.cs)
   - Interfaces: `ILoanRepository`, `IUnitOfWork`
 - **Persistence Layer**:
-  - [LoanRepository.cs](file:///D:/CRM/Persistence/Repositories/LoanRepository.cs)
+  - [LoanRepository.cs](file:///d:/CRM/Persistence/Repositories/LoanRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Phê duyệt thành công** một khoản vay hợp lệ (Cập nhật trạng thái thành `Approved` và ghi nhận Feedback).

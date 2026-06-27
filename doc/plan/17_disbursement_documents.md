@@ -21,3 +21,13 @@ Phát triển luồng quy trình duyệt và giải ngân khoản vay, đồng t
 ## 4. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Giải ngân khoản vay**: Gọi API giải ngân, kiểm tra `LoanStatus`, xác nhận các records `UserRepayment` được sinh ra đúng số lượng, đúng số tiền mỗi kỳ.
 - **TC2: Tạo PDF Hợp đồng**: Kiểm tra file PDF có được sinh ra sau khi duyệt khoản vay, dữ liệu trong PDF có khớp với thông tin khách hàng và khoản vay không.
+
+## 5. Cấu trúc mã nguồn chi tiết
+- **Presentation Layer**:
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs) (Planned endpoints: giải ngân và hợp đồng)
+- **Application Layer**:
+  - [DisburseLoanCommand.cs](file:///d:/CRM/Application/Features/Loan/Command/DisburseLoanCommand.cs)
+  - [IDateTimeService.cs](file:///d:/CRM/Application/Services/Base/IDateTimeService.cs)
+  - Interface: `IUserRepaymentRepository`
+- **Infrastructure Layer**:
+  - [DateTimeService.cs](file:///d:/CRM/Infrastructure/Services/DateTimeService.cs)

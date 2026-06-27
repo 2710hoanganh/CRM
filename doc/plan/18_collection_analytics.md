@@ -20,3 +20,10 @@ Xây dựng công cụ hỗ trợ nhân viên Call Center đòi nợ và Dashboa
 ## 4. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Tạo Collection Task tự động**: Kiểm tra điều kiện khoản vay quá hạn 5 ngày để xem Task đòi nợ có được gán cho Agent không.
 - **TC2: Lấy số liệu Dashboard**: Mock dữ liệu giải ngân, thu nợ, nợ xấu và gọi API dashboard để so sánh tính chính xác của dữ liệu trả về và performance.
+
+## 5. Cấu trúc mã nguồn chi tiết
+- **Application Layer**:
+  - [GetAdminDashboardSummaryQuery.cs](file:///d:/CRM/Application/Features/Loan/Query/GetAdminDashboardSummaryQuery.cs)
+  - [IDashboardQueries.cs](file:///d:/CRM/Application/Features/Loan/Query/IDashboardQueries.cs)
+- **Domain Layer**:
+  - [CollectionTask.cs](file:///d:/CRM/Domain/Entities/CollectionTask.cs)

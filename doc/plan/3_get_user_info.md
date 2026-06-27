@@ -45,12 +45,12 @@ Tính năng cho phép người dùng hiện tại (đã đăng nhập) lấy th�
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [AccountController.cs](file:///D:/CRM/Presentation/Controllers/AccountController.cs)
+  - [AccountController.cs](file:///d:/CRM/Presentation/Controllers/AccountController.cs)
 - **Application Layer**:
-  - [GetUserInfoQuery.cs](file:///D:/CRM/Application/Features/User/Query/GetUserInfoQuery.cs)
-  - `UserInfo` trong [Domain/Models/DTO/User](file:///D:/CRM/Domain/Models/DTO/User)
+  - [GetUserInfoQuery.cs](file:///d:/CRM/Application/Features/User/Query/GetUserInfoQuery.cs)
+  - `UserInfo` trong [Domain/Models/DTO/User](file:///d:/CRM/Domain/Models/DTO/User)
 - **Persistence Layer**:
-  - [UserRepository.cs](file:///D:/CRM/Persistence/Repositories/UserRepository.cs)
+  - [UserRepository.cs](file:///d:/CRM/Persistence/Repositories/UserRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy thông tin thành công** khi cung cấp JWT token hợp lệ.

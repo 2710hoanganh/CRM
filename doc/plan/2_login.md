@@ -27,6 +27,8 @@ Tính năng cho phép người dùng đăng nhập vào hệ thống bằng Emai
         "userInfo": {
           "id": 1,
           "email": "user@example.com",
+          "firstName": "Nguyễn",
+          "lastName": "Văn A",
           "fullName": "Nguyễn Văn A",
           "role": 2
         }
@@ -63,15 +65,15 @@ Tính năng cho phép người dùng đăng nhập vào hệ thống bằng Emai
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [AuthController.cs](file:///D:/CRM/Presentation/Controllers/AuthController.cs)
+  - [AuthController.cs](file:///d:/CRM/Presentation/Controllers/AuthController.cs)
 - **Application Layer**:
-  - [LoginQuery.cs](file:///D:/CRM/Application/Features/User/Query/LoginQuery.cs)
-  - `LoginRequest` / `LoginResponse` trong [Domain/Models/DTO/User](file:///D:/CRM/Domain/Models/DTO/User)
+  - [LoginQuery.cs](file:///d:/CRM/Application/Features/User/Query/LoginQuery.cs)
+  - `LoginRequest` / `LoginResponse` trong [Domain/Models/DTO/User](file:///d:/CRM/Domain/Models/DTO/User)
 - **Infrastructure Layer**:
-  - [HashingService.cs](file:///D:/CRM/Infrastructure/Services/HashingService.cs)
-  - [TokenService.cs](file:///D:/CRM/Infrastructure/Services/TokenService.cs)
+  - [HashingService.cs](file:///d:/CRM/Infrastructure/Services/HashingService.cs)
+  - [TokenService.cs](file:///d:/CRM/Infrastructure/Services/TokenService.cs)
 - **Persistence Layer**:
-  - [UserRepository.cs](file:///D:/CRM/Persistence/Repositories/UserRepository.cs)
+  - [UserRepository.cs](file:///d:/CRM/Persistence/Repositories/UserRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Đăng nhập thành công** với thông tin chính xác, kiểm tra xem Access Token có chứa đúng Claim của User không.

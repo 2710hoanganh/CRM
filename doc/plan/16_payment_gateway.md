@@ -23,3 +23,11 @@ Tích hợp hệ thống thanh toán với bên thứ 3 (như VNPAY) để khác
 - **TC1: Tạo URL thanh toán thành công**: Gọi API create-url và kiểm tra URL trả về có đầy đủ tham số và chữ ký hợp lệ của VNPAY.
 - **TC2: Xử lý IPN hợp lệ**: Gửi một request IPN giả lập với chữ ký đúng, kiểm tra hệ thống có tự động chạy `PayLoanCommand` và ghi nhận thanh toán thành công.
 - **TC3: Xử lý IPN giả mạo/trùng lặp**: Gửi IPN sai chữ ký -> Bị reject. Gửi lại một IPN đã xử lý (cùng ReferenceNumber) -> Không cộng dồn/trừ nợ thêm.
+
+## 5. Cấu trúc mã nguồn chi tiết
+- **Presentation Layer**:
+  - [PaymentController.cs](file:///d:/CRM/Presentation/Controllers/PaymentController.cs)
+- **Application Layer**:
+  - [IVNPayService.cs](file:///d:/CRM/Application/Services/IVNPayService.cs)
+- **Infrastructure Layer**:
+  - [VNPayService.cs](file:///d:/CRM/Infrastructure/Services/VNPayService.cs)

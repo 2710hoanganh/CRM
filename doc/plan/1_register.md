@@ -60,14 +60,14 @@ Tính năng cho phép người dùng đăng ký tài khoản mới trong hệ th
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [AuthController.cs](file:///D:/CRM/Presentation/Controllers/AuthController.cs)
+  - [AuthController.cs](file:///d:/CRM/Presentation/Controllers/AuthController.cs)
 - **Application Layer**:
-  - [RegisterCommand.cs](file:///D:/CRM/Application/Features/User/Command/RegisterCommand.cs)
-  - `RegisterModelRequest` / `RegisterModelResponse` trong [Domain/Models/DTO/User](file:///D:/CRM/Domain/Models/DTO/User)
+  - [RegisterCommand.cs](file:///d:/CRM/Application/Features/User/Command/RegisterCommand.cs)
+  - `RegisterModelRequest` / `RegisterModelResponse` trong [Domain/Models/DTO/User](file:///d:/CRM/Domain/Models/DTO/User)
 - **Infrastructure Layer**:
-  - [HashingService.cs](file:///D:/CRM/Infrastructure/Services/HashingService.cs)
+  - [HashingService.cs](file:///d:/CRM/Infrastructure/Services/HashingService.cs)
 - **Persistence Layer**:
-  - [UserRepository.cs](file:///D:/CRM/Persistence/Repositories/UserRepository.cs)
+  - [UserRepository.cs](file:///d:/CRM/Persistence/Repositories/UserRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Đăng ký thành công** với dữ liệu hợp lệ (Email chưa tồn tại).

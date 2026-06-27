@@ -34,12 +34,12 @@ Tính năng sử dụng **Hangfire** làm công cụ quản lý và chạy các 
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Application Layer (Interfaces)**:
-  - [IHangFireService.cs](file:///D:/CRM/Application/Services/IHangFireService.cs)
-  - [IRecurringJobRegistrar.cs](file:///D:/CRM/Application/Services/IRecurringJobRegistrar.cs)
+  - [IHangFireService.cs](file:///d:/CRM/Application/Services/IHangFireService.cs)
+  - [IRecurringJobRegistrar.cs](file:///d:/CRM/Application/Services/IRecurringJobRegistrar.cs)
 - **Infrastructure Layer (Implementations)**:
-  - [HangFireService.cs](file:///D:/CRM/Infrastructure/Extensions/HangFire/HangFireService.cs)
-  - [RecurringJobRegistrar.cs](file:///D:/CRM/Infrastructure/Extensions/HangFire/RecurringJobRegistrar.cs)
-  - [HangfireDatabaseEnsurer.cs](file:///D:/CRM/Infrastructure/Extensions/HangFire/HangfireDatabaseEnsurer.cs) (Tự động khởi tạo database Hangfire nếu chưa tồn tại ở SQL Server)
+  - [HangFireService.cs](file:///d:/CRM/Infrastructure/Extensions/HangFire/HangFireService.cs)
+  - [RecurringJobRegistrar.cs](file:///d:/CRM/Infrastructure/Extensions/HangFire/RecurringJobRegistrar.cs)
+  - [HangfireDatabaseEnsurer.cs](file:///d:/CRM/Infrastructure/Extensions/HangFire/HangfireDatabaseEnsurer.cs) (Tự động khởi tạo database Hangfire nếu chưa tồn tại ở SQL Server)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Đăng ký thành công các Job khi startup**: Kiểm tra Hangfire Dashboard tại `/hangfire` để xác minh danh sách 4 Recurring Jobs đã hiển thị đúng cấu hình Cron.

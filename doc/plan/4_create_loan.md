@@ -37,7 +37,6 @@ Tính năng cho phép người dùng đăng ký một khoản vay mới với s�
 ## 3. Các thực thể Database liên quan (Database Entities)
 - **Loan**: Lưu trữ thông tin khoản vay mới (Số tiền, Kỳ hạn, Lãi suất, Tổng tiền phải trả, Số tiền trả mỗi kỳ, Trạng thái mặc định: `Pending`).
 - **UserReference**: Dùng để kiểm tra xem người dùng đã cập nhật đủ thông tin người tham chiếu chưa.
-- **UserRepayment**: Lưu trữ kế hoạch/lịch trả nợ cho từng kỳ của khoản vay (sinh ra tự động dựa trên kỳ hạn vay).
 
 ## 4. Quy trình xử lý & Nghiệp vụ (Business Logic & Workflow)
 1. Người dùng gửi yêu cầu qua `/api/v1/loan/create`.
@@ -50,21 +49,19 @@ Tính năng cho phép người dùng đăng ký một khoản vay mới với s�
    - Bắt đầu một database transaction qua `IUnitOfWork.BeginTransactionAsync` để đảm bảo tính toàn vẹn dữ liệu.
    - Tạo thực thể `Loan` với trạng thái ban đầu là `Pending` (Chờ duyệt).
    - Lưu `Loan` vào DB để có `LoanId`.
-   - Sinh lịch trả nợ `UserRepayment` cho từng kỳ (mỗi kỳ cách nhau 1 tháng tính từ thời điểm hiện tại). Tác vụ này chạy bất đồng bộ trong background task (`Task.Run`).
-   - Commit transaction và trả về kết quả thành công.
+   - Commit transaction và trả về kết quả thành công. (Ghi chú: Lịch trả nợ `UserRepayment` sẽ được sinh ra sau đó khi Admin thực hiện giải ngân khoản vay thông qua `DisburseLoanCommand`).
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [LoanController.cs](file:///D:/CRM/Presentation/Controllers/LoanController.cs)
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs)
 - **Application Layer**:
-  - [CreateLoanCommand.cs](file:///D:/CRM/Application/Features/Loan/Command/CreateLoanCommand.cs)
-  - `CreateLoanRequest` trong [Domain/Models/DTO/Loan](file:///D:/CRM/Domain/Models/DTO/Loan)
-  - Interfaces: `ILoanRepository`, `ILoanInterestRate`, `IUserRepaymentRepository`, `IUserReferenceRepository`
+  - [CreateLoanCommand.cs](file:///d:/CRM/Application/Features/Loan/Command/CreateLoanCommand.cs)
+  - `CreateLoanRequest` trong [Domain/Models/DTO/Loan](file:///d:/CRM/Domain/Models/DTO/Loan)
+  - Interfaces: `ILoanRepository`, `ILoanInterestRate`, `IUserReferenceRepository`
 - **Infrastructure Layer**:
-  - [LoanInterestRateService.cs](file:///D:/CRM/Infrastructure/Services/LoanInterestRateService.cs) (Tính toán lãi suất và tổng tiền)
-  - [DateTimeService.cs](file:///D:/CRM/Infrastructure/Services/DateTimeService.cs) (Xác định ngày đến hạn trả nợ)
+  - [LoanInterestRateService.cs](file:///d:/CRM/Infrastructure/Services/LoanInterestRateService.cs) (Tính toán lãi suất và tổng tiền)
 - **Persistence Layer**:
-  - [Repositories](file:///D:/CRM/Persistence/Repositories)
+  - [Repositories](file:///d:/CRM/Persistence/Repositories)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Tạo khoản vay thành công** khi người dùng có đầy đủ thông tin tham chiếu. Kiểm tra xem các bản ghi lịch trả nợ (`UserRepayment`) có được sinh ra chính xác và khớp với số tháng của kỳ hạn vay không.

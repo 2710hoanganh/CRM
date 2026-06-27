@@ -8,29 +8,35 @@ Tính năng cho phép khách hàng hiện tại (đã đăng nhập) xem danh s�
 - **URL**: `/api/v1/loan/all-user`
 - **Authentication**: Yêu cầu xác thực JWT (User Role)
 - **Request Parameters**:
-  - `pageNumber` (int, default: 1)
-  - `pageSize` (int, default: 10)
+  - `pageNumber` (ulong, default: 0)
+  - `pageSize` (ulong, default: 20)
 - **Response Body**: `Response<Paged<List<ListLoanResponse>>>`
   - Thành công:
     ```json
     {
       "result": 1,
       "data": {
-        "items": [
+        "pageNumber": 0,
+        "pageSize": 20,
+        "firstPage": 0,
+        "lastPage": 0,
+        "totalPages": 1,
+        "totalRecords": 1,
+        "nextPage": false,
+        "previousPage": false,
+        "data": [
           {
             "id": 1,
+            "userId": 1,
+            "userName": "Nguyễn Văn A",
             "amount": 10000000,
             "term": 12,
-            "interestRate": 10,
-            "status": 0,
             "total": 11000000,
-            "userName": "Nguyễn Văn A"
+            "paybackAmount": 916666.67,
+            "createdAt": "2026-06-20T19:12:00",
+            "status": 0
           }
         ],
-        "pageNumber": 1,
-        "pageSize": 10,
-        "totalCount": 1,
-        "totalPages": 1,
         "message": "Success"
       },
       "message": "Success"
@@ -51,13 +57,13 @@ Tính năng cho phép khách hàng hiện tại (đã đăng nhập) xem danh s�
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [LoanController.cs](file:///D:/CRM/Presentation/Controllers/LoanController.cs)
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs)
 - **Application Layer**:
-  - [GetAllUserLoan.cs](file:///D:/CRM/Application/Features/Loan/Query/GetAllUserLoan.cs)
-  - `ListLoanResponse` DTO trong [Domain/Models/DTO/Loan](file:///D:/CRM/Domain/Models/DTO/Loan)
+  - [GetAllUserLoan.cs](file:///d:/CRM/Application/Features/Loan/Query/GetAllUserLoan.cs)
+  - `ListLoanResponse` DTO trong [Domain/Models/DTO/Loan](file:///d:/CRM/Domain/Models/DTO/Loan)
   - Interface: `ILoanRepository`
 - **Persistence Layer**:
-  - [LoanRepository.cs](file:///D:/CRM/Persistence/Repositories/LoanRepository.cs)
+  - [LoanRepository.cs](file:///d:/CRM/Persistence/Repositories/LoanRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy danh sách thành công** trả về chính xác danh sách các khoản vay thuộc sở hữu của người dùng hiện tại (không hiển thị khoản vay của người khác).

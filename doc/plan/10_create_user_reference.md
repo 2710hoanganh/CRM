@@ -64,13 +64,13 @@ Tính năng cho phép người dùng thêm thông tin người tham chiếu (Ref
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [UserReferenceController.cs](file:///D:/CRM/Presentation/Controllers/UserReferenceController.cs)
+  - [UserReferenceController.cs](file:///d:/CRM/Presentation/Controllers/UserReferenceController.cs)
 - **Application Layer**:
-  - [CreateUserReference.cs](file:///D:/CRM/Application/Features/UserReference/Command/CreateUserReference.cs)
-  - `CreateUserReferenceRequest` trong [Domain/Models/DTO/UserReference](file:///D:/CRM/Domain/Models/DTO/UserReference)
+  - [CreateUserReference.cs](file:///d:/CRM/Application/Features/UserReference/Command/CreateUserReference.cs)
+  - `CreateUserReferenceRequest` trong [Domain/Models/DTO/UserReference](file:///d:/CRM/Domain/Models/DTO/UserReference)
   - Interface: `IUserReferenceRepository`
 - **Persistence Layer**:
-  - [UserReferenceRepository.cs](file:///D:/CRM/Persistence/Repositories/UserReferenceRepository.cs)
+  - [UserReferenceRepository.cs](file:///d:/CRM/Persistence/Repositories/UserReferenceRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Tạo thông tin tham chiếu thành công** khi truyền vào danh sách người tham chiếu hợp lệ (họ tên, số điện thoại, mối quan hệ).

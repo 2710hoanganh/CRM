@@ -26,3 +26,16 @@ Tính năng quản lý thanh toán nợ và sổ cái (Core Payment Engine) là 
 - **TC1: Thanh toán đầy đủ kỳ hạn**: Gửi số tiền bằng tổng (Gốc + Lãi + Phạt), kiểm tra trạng thái cập nhật thành `Paid` và ghi log đúng.
 - **TC2: Thanh toán một phần (Partial)**: Gửi số tiền nhỏ hơn tổng cần trả, kiểm tra Waterfall logic trừ đúng thứ tự Phạt -> Lãi -> Gốc, và cập nhật trạng thái `Partial`.
 - **TC3: Kiểm tra lưu vết**: Xác nhận mỗi giao dịch đều sinh ra đúng 1 record trong `LoanTransaction`.
+
+## 5. Cấu trúc mã nguồn chi tiết
+- **Presentation Layer**:
+  - [PaymentController.cs](file:///d:/CRM/Presentation/Controllers/PaymentController.cs)
+- **Application Layer**:
+  - [PayLoanCommand.cs](file:///d:/CRM/Application/Features/Loan/Command/PayLoanCommand.cs)
+  - Interfaces: `IUserRepaymentRepository`, `ILoanRepository`, `ILoanTransactionRepository`, `IUnitOfWork`
+- **Domain Layer**:
+  - [LoanTransaction.cs](file:///d:/CRM/Domain/Entities/LoanTransaction.cs)
+  - [UserRepayment.cs](file:///d:/CRM/Domain/Entities/UserRepayment.cs)
+  - [Loan.cs](file:///d:/CRM/Domain/Entities/Loan.cs)
+- **Persistence Layer**:
+  - [LoanTransactionRepository.cs](file:///d:/CRM/Persistence/Repositories/LoanTransactionRepository.cs)

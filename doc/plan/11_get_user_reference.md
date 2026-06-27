@@ -8,26 +8,29 @@ Tính năng cho phép người dùng hoặc hệ thống xem danh sách các ng�
 - **URL**: `/api/v1/user-reference/get-all`
 - **Authentication**: Yêu cầu xác thực JWT (User Role)
 - **Request Parameters**:
-  - `pageNumber` (int, default: 1)
-  - `pageSize` (int, default: 10)
+  - `pageNumber` (ulong, default: 0)
+  - `pageSize` (ulong, default: 20)
 - **Response Body**: `Response<Paged<List<GetUserReferenceResponse>>>`
   - Thành công:
     ```json
     {
       "result": 1,
       "data": {
-        "items": [
+        "pageNumber": 0,
+        "pageSize": 20,
+        "firstPage": 0,
+        "lastPage": 0,
+        "totalPages": 1,
+        "totalRecords": 1,
+        "nextPage": false,
+        "previousPage": false,
+        "data": [
           {
-            "id": 1,
             "fullName": "Nguyễn Văn B",
             "phoneNumber": "0987654321",
             "relationship": 1
           }
         ],
-        "pageNumber": 1,
-        "pageSize": 10,
-        "totalCount": 1,
-        "totalPages": 1,
         "message": "Success"
       },
       "message": "Success"
@@ -48,13 +51,13 @@ Tính năng cho phép người dùng hoặc hệ thống xem danh sách các ng�
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [UserReferenceController.cs](file:///D:/CRM/Presentation/Controllers/UserReferenceController.cs)
+  - [UserReferenceController.cs](file:///d:/CRM/Presentation/Controllers/UserReferenceController.cs)
 - **Application Layer**:
-  - [GetUserReference.cs](file:///D:/CRM/Application/Features/UserReference/Query/GetUserReference.cs)
-  - `GetUserReferenceResponse` trong [Domain/Models/DTO/UserReference](file:///D:/CRM/Domain/Models/DTO/UserReference)
+  - [GetUserReference.cs](file:///d:/CRM/Application/Features/UserReference/Query/GetUserReference.cs)
+  - `GetUserReferenceResponse` trong [Domain/Models/DTO/UserReference](file:///d:/CRM/Domain/Models/DTO/UserReference)
   - Interface: `IUserReferenceRepository`
 - **Persistence Layer**:
-  - [UserReferenceRepository.cs](file:///D:/CRM/Persistence/Repositories/UserReferenceRepository.cs)
+  - [UserReferenceRepository.cs](file:///d:/CRM/Persistence/Repositories/UserReferenceRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy danh sách thành công** trả về đúng danh sách những người tham chiếu của người dùng hiện tại đang đăng nhập.

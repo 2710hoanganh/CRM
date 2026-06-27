@@ -8,8 +8,8 @@ Tính năng cho phép người dùng xem danh sách các thông báo cá nhân �
 - **URL**: `/api/v1/notification/list`
 - **Authentication**: Yêu cầu xác thực JWT (User Role)
 - **Request Parameters**:
-  - `pageNumber` (int, default: 1)
-  - `pageSize` (int, default: 10)
+  - `pageNumber` (ulong, default: 0)
+  - `pageSize` (ulong, default: 20)
 - **Response Body**: `Response<List<NotficationList>>`
   - Thành công:
     ```json
@@ -21,7 +21,9 @@ Tính năng cho phép người dùng xem danh sách các thông báo cá nhân �
           "title": "Nhắc nợ khoản vay",
           "content": "Khoản vay của bạn sắp đến hạn thanh toán trong 3 ngày tới.",
           "type": 1,
-          "createdDate": "2026-06-20T19:12:00"
+          "status": 0,
+          "isRead": false,
+          "createdAt": "2026-06-20T19:12:00"
         }
       ],
       "message": "Notifications fetched successfully"
@@ -42,13 +44,13 @@ Tính năng cho phép người dùng xem danh sách các thông báo cá nhân �
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [NotifcationController.cs](file:///D:/CRM/Presentation/Controllers/NotifcationController.cs)
+  - [NotifcationController.cs](file:///d:/CRM/Presentation/Controllers/NotifcationController.cs)
 - **Application Layer**:
-  - [ListNoitifiaction.cs](file:///D:/CRM/Application/Features/Notification/Query/ListNoitifiaction.cs)
-  - `NotficationList` DTO trong [Domain/Models/DTO/Notification](file:///D:/CRM/Domain/Models/DTO/Notification)
+  - [ListNoitifiaction.cs](file:///d:/CRM/Application/Features/Notification/Query/ListNoitifiaction.cs)
+  - `NotficationList` DTO trong [Domain/Models/DTO/Notification](file:///d:/CRM/Domain/Models/DTO/Notification)
   - Interface: `INotificationRepository`
 - **Persistence Layer**:
-  - [NotificationRepository.cs](file:///D:/CRM/Persistence/Repositories/NotificationRepository.cs)
+  - [NotificationRepository.cs](file:///d:/CRM/Persistence/Repositories/NotificationRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy danh sách thông báo thành công** trả về các thông báo của chính người dùng hiện tại đang đăng nhập.

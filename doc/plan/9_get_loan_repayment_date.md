@@ -18,18 +18,24 @@ Tính năng cho phép người dùng xem lịch trình trả nợ chi tiết c�
         "amount": 10000000,
         "repaymentDates": [
           {
-            "id": 1,
             "repaymentDate": "2026-07-20T19:12:00",
             "status": 0
           },
           {
-            "id": 2,
             "repaymentDate": "2026-08-20T19:12:00",
             "status": 0
           }
         ]
       },
       "message": "Loan repayment dates retrieved successfully"
+    }
+    ```
+  - Thất bại (Ví dụ: Không tìm thấy khoản vay):
+    ```json
+    {
+      "result": 0,
+      "data": null,
+      "message": "Loan not found"
     }
     ```
 
@@ -48,13 +54,13 @@ Tính năng cho phép người dùng xem lịch trình trả nợ chi tiết c�
 
 ## 5. Cấu trúc mã nguồn chi tiết
 - **Presentation Layer**:
-  - [LoanController.cs](file:///D:/CRM/Presentation/Controllers/LoanController.cs)
+  - [LoanController.cs](file:///d:/CRM/Presentation/Controllers/LoanController.cs)
 - **Application Layer**:
-  - [GetLoanRepaymentDate.cs](file:///D:/CRM/Application/Features/Loan/Query/GetLoanRepaymentDate.cs)
-  - DTOs: `UserListRepayment` và `UserRepaymentDateResponse` trong [Domain/Models/DTO/UserRepayment](file:///D:/CRM/Domain/Models/DTO/UserRepayment)
+  - [GetLoanRepaymentDate.cs](file:///d:/CRM/Application/Features/Loan/Query/GetLoanRepaymentDate.cs)
+  - DTOs: `UserListRepayment` và `UserRepaymentDateResponse` trong [Domain/Models/DTO/UserRepayment](file:///d:/CRM/Domain/Models/DTO/UserRepayment)
 - **Persistence Layer**:
-  - [UserRepaymentRepository.cs](file:///D:/CRM/Persistence/Repositories/UserRepaymentRepository.cs)
-  - [LoanRepository.cs](file:///D:/CRM/Persistence/Repositories/LoanRepository.cs)
+  - [UserRepaymentRepository.cs](file:///d:/CRM/Persistence/Repositories/UserRepaymentRepository.cs)
+  - [LoanRepository.cs](file:///d:/CRM/Persistence/Repositories/LoanRepository.cs)
 
 ## 6. Kịch bản Kiểm thử (Test Cases)
 - **TC1: Lấy lịch trả nợ thành công** khi khoản vay có tồn tại trong hệ thống. Kiểm tra xem thứ tự hiển thị và số lượng kỳ trả nợ có khớp với kỳ hạn của khoản vay ban đầu không.

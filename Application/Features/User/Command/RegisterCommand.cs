@@ -4,7 +4,6 @@ using Domain.Models.DTO.User;
 using Application.Repositories.Base;
 using Application.Repositories;
 using Domain.Constants.AppEnum;
-
 namespace Application.Features.User.Command
 {
     public class RegisterCommand : IRequest<Response<RegisterModelResponse>>
@@ -31,7 +30,7 @@ namespace Application.Features.User.Command
                     var isExist = await _userRepository.Find(x => x.Email == request.Request.Email, null, false, cancellationToken);
                     if (isExist == true)
                     {
-                        return new Response<RegisterModelResponse>(ResponseResult.ERROR, "Email already exists", null, null);
+                        return new Response<RegisterModelResponse>(ResponseResult.ERROR, Domain.Constants.Error.EmailExists, null, null);
                     }
 
                     var user = new Domain.Entities.User
@@ -46,7 +45,6 @@ namespace Application.Features.User.Command
 
                     var result = await _userRepository.Add(user, cancellationToken);
                     await _unitOfWork.SaveChangesAsync(cancellationToken);
-                   
                     return new Response<RegisterModelResponse>(ResponseResult.SUCCESS, "User registered successfully", _autoMapper.Map<RegisterModelResponse>(result), null);   
                 }
                 catch (Exception ex)

@@ -6,6 +6,11 @@ using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using Domain.Models.Common;
+using Infrastructure.Extensions.RabbitMQ;
+using Hangfire;
+using Application.Services;
+using Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +33,12 @@ builder.Services.AddApiVersioning(options =>
 // Add Application (MediatR, etc.)
 builder.Services.AddApplication();
 
+// Configure RabbitMQ
+builder.Services.Configure<RabbitMqConfig>(builder.Configuration.GetSection("RabbitMQ"));
+builder.Services.AddSingleton<RabbitMqConsumer>();
+
 // Add Infrastructure (AutoMapper, External Services, etc.)
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add Persistence (DbContext, Repositories, UnitOfWork)
 builder.Services.AddPersistence(builder.Configuration);
@@ -74,6 +83,27 @@ builder.Services.Configure<JWT>(
 
 var app = builder.Build();
 
+// Đợi SQL sẵn sàng rồi mới Migrate (Docker compose: db container start trước nhưng SQL chưa listen ngay)
+const int maxMigrateRetries = 15;
+const int migrateRetryDelayMs = 3000;
+for (var attempt = 1; attempt <= maxMigrateRetries; attempt++)
+{
+    try
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            dbContext.Database.Migrate();
+        }
+        break;
+    }
+    catch (Exception)
+    {
+        if (attempt == maxMigrateRetries) throw;
+        Thread.Sleep(migrateRetryDelayMs);
+    }
+}
+
 //Swagger
 // if is development, use swagger
 if (app.Environment.IsDevelopment())
@@ -97,6 +127,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Hangfire (dashboard + recurring jobs qua IRecurringJobRegistrar — Clean Architecture)
+app.UseHangfireDashboard("/hangfire");
+app.Services.GetRequiredService<IRecurringJobRegistrar>().RegisterRecurringJobs();
 // map controllers
 app.MapControllers();
 

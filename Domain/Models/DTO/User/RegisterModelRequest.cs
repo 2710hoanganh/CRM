@@ -15,8 +15,5 @@ namespace Domain.Models.DTO.User
         [MaxLength(20)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")]
         public required string Password { get; set; }
-        [Required]
-        [Compare("Password", ErrorMessage = "Password and ConfirmPassword must match")]
-        public required string ConfirmPassword { get; set; }
     }
 }

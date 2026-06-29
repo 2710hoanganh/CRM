@@ -21,24 +21,28 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Register([FromBody] RegisterModelRequest request, CancellationToken cancellationToken)
         {
+            var command = new RegisterCommand { Request = request };
             var result = await _mediator.Send(command, cancellationToken);
-            return Ok(new Response<RegisterModelResponse>(ResponseResult.SUCCESS)
+            return Ok(new Response<RegisterModelResponse>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "User registered successfully" : "User registered failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "User registered successfully" : Domain.Constants.Error.UserRegisterFailed),
+                Errors = result.Errors
             });
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginQuery query, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
         {
+            var query = new LoginQuery { Request = request };
             var result = await _mediator.Send(query, cancellationToken);
-            return Ok(new Response<LoginResponse>(ResponseResult.SUCCESS)
+            return Ok(new Response<LoginResponse>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "Login successful" : "Login failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Login successful" : Domain.Constants.Error.LoginFailed),
+                Errors = result.Errors
             });
         }
     }

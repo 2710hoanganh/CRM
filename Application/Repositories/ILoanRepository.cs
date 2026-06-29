@@ -1,7 +1,7 @@
 using Application.Repositories.Base;
 using Domain.Entities;
 using Domain.Models.Common;
-using System.Linq.Expressions;
+    using System.Linq.Expressions;
 
 namespace Application.Repositories
 {

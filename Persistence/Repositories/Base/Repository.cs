@@ -200,12 +200,12 @@ namespace Persistence.Repositories.Base
 
             // This would need a selector, but interface doesn't provide one
             // This method signature seems incomplete in the interface
-            throw new NotImplementedException("GetOne<TType> requires a selector which is not provided in the interface");
+            throw new NotImplementedException(Domain.Constants.Error.GetOneSelectorRequired);
         }
 
         public virtual async Task<T> GetById(object id, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(new[] { id }, cancellationToken) ?? throw new InvalidOperationException($"Entity with id {id} not found");
+            return await _dbSet.FindAsync(new[] { id }, cancellationToken) ?? throw new InvalidOperationException(string.Format(Domain.Constants.Error.EntityNotFoundTemplate, id));
         }
 
         public virtual async Task<bool> Find(

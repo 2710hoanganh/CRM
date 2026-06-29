@@ -25,7 +25,7 @@ namespace Application.Features.User.Query
                     var user = await _userRepository.GetOne(x => x.Id == request.Id, null, null, cancellationToken);
                     if (user == null)
                     {
-                        return new Response<UserInfo>(ResponseResult.ERROR, "Get user info failed", null, null);
+                        return new Response<UserInfo>(ResponseResult.ERROR, Domain.Constants.Error.UserNotFound, null, null);
                     }
                     return new Response<UserInfo>(ResponseResult.SUCCESS, "Get user info successful", _autoMapper.Map<UserInfo>(user), null);
                 }

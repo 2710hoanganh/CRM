@@ -25,17 +25,15 @@ namespace Presentation.Controllers
 
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateUserReference([FromBody] CreateUserReferenceRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateUserReference([FromBody] CreateUserReferenceCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new CreateUserReferenceCommand
-            {
-                Requests = new List<CreateUserReferenceRequest> { request },
-                Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0")
-            }, cancellationToken);
-            return Ok(new Response<bool>(ResponseResult.SUCCESS)
+            command.Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(new Response<bool>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "User references created successfully" : "User references created failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "User references created successfully" : Domain.Constants.Error.UserReferencesCreateFailed),
+                Errors = result.Errors
             });
         }
 
@@ -48,10 +46,11 @@ namespace Presentation.Controllers
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize
             }, cancellationToken);
-            return Ok(new Response<Paged<List<GetUserReferenceResponse>>>(ResponseResult.SUCCESS)
+            var isSuccess = result.Message != ResponseResult.ERROR.ToString();
+            return Ok(new Response<Paged<List<GetUserReferenceResponse>>>(isSuccess ? ResponseResult.SUCCESS : ResponseResult.ERROR)
             {
                 Data = result,
-                Message = result.Message
+                Message = isSuccess ? result.Message : Domain.Constants.Error.GetUserReferencesFailed
             });
         }
 

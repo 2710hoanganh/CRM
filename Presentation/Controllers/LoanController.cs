@@ -8,6 +8,7 @@ using Domain.Constants.AppEnum;
 using Domain.Models.DTO.Loan;
 using Application.Features.Loan.Command;
 using Presentation.DTOs;
+using Domain.Models.DTO.UserRepayment;
 
 namespace Presentation.Controllers
 {
@@ -32,10 +33,11 @@ namespace Presentation.Controllers
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize
             }, cancellationToken);
-            return Ok(new Response<Paged<List<ListLoanResponse>>>(ResponseResult.SUCCESS)
+            var isSuccess = result.Message != ResponseResult.ERROR.ToString();
+            return Ok(new Response<Paged<List<ListLoanResponse>>>(isSuccess ? ResponseResult.SUCCESS : ResponseResult.ERROR)
             {
                 Data = result,
-                Message = result.Message
+                Message = isSuccess ? result.Message : Domain.Constants.Error.GetLoansFailed
             });
         }
 
@@ -49,10 +51,11 @@ namespace Presentation.Controllers
                 PageNumber = query.PageNumber,
                 PageSize = query.PageSize
             }, cancellationToken);
-            return Ok(new Response<Paged<List<ListLoanResponse>>>(ResponseResult.SUCCESS)
+            var isSuccess = result.Message != ResponseResult.ERROR.ToString();
+            return Ok(new Response<Paged<List<ListLoanResponse>>>(isSuccess ? ResponseResult.SUCCESS : ResponseResult.ERROR)
             {
                 Data = result,
-                Message = result.Message
+                Message = isSuccess ? result.Message : Domain.Constants.Error.GetUserLoansFailed
             });
         }
 
@@ -64,10 +67,25 @@ namespace Presentation.Controllers
                 Id = query.Id,
             }, cancellationToken);
 
-            return Ok(new Response<GetLoanInfoResponse>(ResponseResult.SUCCESS)
+            return Ok(new Response<GetLoanInfoResponse>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "Loan info found" : "Loan info not found"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Loan info found" : Domain.Constants.Error.LoanInfoNotFound)
+            });
+        }
+
+        [HttpGet("repayment")]
+        public async Task<IActionResult> GetLoanRepaymentDate([FromQuery] BaseFieldsDto query, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetLoanRepaymentDateQuery
+            {
+                Id = query.Id,
+            }, cancellationToken);
+                
+            return Ok(new Response<UserListRepayment>(result.Result)
+            {
+                Data = result.Data,
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Loan repayment dates retrieved successfully" : Domain.Constants.Error.LoanRepaymentDatesNotFound)
             });
         }
 
@@ -78,10 +96,10 @@ namespace Presentation.Controllers
             command.Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
             var result = await _mediator.Send(command, cancellationToken);
-            return Ok(new Response<bool>(ResponseResult.SUCCESS)
+            return Ok(new Response<bool>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "Loan created successfully" : "Loan created failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Loan created successfully" : Domain.Constants.Error.LoanCreateFailed)
             });
         }
 
@@ -90,10 +108,10 @@ namespace Presentation.Controllers
         public async Task<IActionResult> ReviewLoan([FromBody] ReviewLoanCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken);
-            return Ok(new Response<bool>(ResponseResult.SUCCESS)
+            return Ok(new Response<bool>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "Loan reviewed successfully" : "Loan reviewed failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Loan reviewed successfully" : Domain.Constants.Error.LoanReviewFailed)
             });
         }
     }

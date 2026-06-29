@@ -32,7 +32,7 @@ namespace Persistence.Repositories.Base
             // Kiểm tra nếu transactionId đã tồn tại
             if (_transactions.ContainsKey(transactionId))
             {
-                throw new InvalidOperationException($"Transaction with ID {transactionId} already exists.");
+                throw new InvalidOperationException(string.Format(Domain.Constants.Error.TransactionExistsTemplate, transactionId));
             }
 
             // Begin transaction
@@ -70,7 +70,7 @@ namespace Persistence.Repositories.Base
             }
             else
             {
-                throw new InvalidOperationException($"Transaction with ID {transactionId} not found.");
+                throw new InvalidOperationException(string.Format(Domain.Constants.Error.TransactionNotFoundTemplate, transactionId));
             }
         }
 
@@ -100,7 +100,7 @@ namespace Persistence.Repositories.Base
             }
             else
             {
-                throw new InvalidOperationException($"Transaction with ID {transactionId} not found.");
+                throw new InvalidOperationException(string.Format(Domain.Constants.Error.TransactionNotFoundTemplate, transactionId));
             }
         }
 

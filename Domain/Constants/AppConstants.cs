@@ -1,3 +1,4 @@
+using Domain.Constants.AppEnum;
 namespace Domain.Constants.AppConstants
 {
     public static class AppConstants
@@ -7,5 +8,12 @@ namespace Domain.Constants.AppConstants
         public static readonly decimal PremiumLoanRate = 0.01M;
 
         public const decimal RiskStep = 0.12m;
+
+
+        public static readonly Dictionary<int, string> Queues = new Dictionary<int, string>()
+        {
+            { (int)Queue.CreateNotification, "CreateNotificationQueue" },
+            { (int)Queue.ConsumeNotification, "ConsumeNotificationQueue" },
+        };
     }
 }

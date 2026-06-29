@@ -23,7 +23,7 @@ namespace Application.Features.Loan.Query
                 try
                 {
                     var paged = await _loanRepository.GetPaginationWithUser(x => x.UserId == request.Id, null, x => _autoMapper.Map<ListLoanResponse>(x), request.PageNumber, request.PageSize, cancellationToken);
-                    var loans = paged.Data.Select(x => _autoMapper.Map<ListLoanResponse>(x)).ToList();
+                    var loans = paged.Data.ToList();
                     return new Paged<List<ListLoanResponse>>(loans, request.PageNumber, request.PageSize, paged.TotalRecords, paged.Message);
                 }
                 catch (Exception)

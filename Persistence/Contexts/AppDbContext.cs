@@ -13,6 +13,11 @@ namespace Persistence.Contexts
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserReference> UserReferences { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Loan> Loans { get; set; }
+        public DbSet<UserRepayment> UserRepayments { get; set; }
+        public DbSet<LoanTransaction> LoanTransactions { get; set; }
+        public DbSet<CollectionTask> CollectionTasks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

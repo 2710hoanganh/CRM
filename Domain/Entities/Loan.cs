@@ -26,5 +26,6 @@ namespace Domain.Entities
 
         //ref
         public ICollection<UserRepayment> UserRepayments { get; set; } = new List<UserRepayment>();
+        public ICollection<LoanTransaction> LoanTransactions { get; set; } = new List<LoanTransaction>();
     }
 }

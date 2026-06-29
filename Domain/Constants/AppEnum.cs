@@ -9,8 +9,8 @@ namespace Domain.Constants.AppEnum
 
     public enum ResponseResult
     {
-        SUCCESS = 0,
-        ERROR = 1,
+        ERROR = 0,
+        SUCCESS = 1,
         VALIDATION_ERROR = 2,
         NOT_FOUND = 3,
         UNAUTHORIZED = 4,
@@ -45,8 +45,20 @@ namespace Domain.Constants.AppEnum
         Pending = 0,
         Approved = 1,
         Rejected = 2,
-        Paid = 3,
-        Cancelled = 4,
+        Disbursing = 3,
+        Active = 4,
+        Completed = 5,
+        BadDebt = 6,
+        Cancelled = 7,
+        Overdue = 8
+    }
+
+    public enum TransactionType
+    {
+        Disbursement = 0,
+        Repayment = 1,
+        EarlySettlement = 2,
+        PenaltyFee = 3
     }
 
     public enum UserLoanStatus
@@ -80,6 +92,21 @@ namespace Domain.Constants.AppEnum
         Pending = 0,
         Due = 1,
         Overdue = 2,
-        Paid = 3
+        Paid = 3,
+        Partial = 4
+    }
+
+    public enum NotificationType
+    {
+        Loan = 0,
+        Payment = 1,
+        Reminder = 2,
+        Other = 3
+    }
+
+    public enum Queue
+    {
+        CreateNotification = 0,
+        ConsumeNotification = 1,
     }
 }

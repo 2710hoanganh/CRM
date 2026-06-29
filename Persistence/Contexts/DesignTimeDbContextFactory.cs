@@ -18,6 +18,7 @@ namespace Persistence.Contexts
 
             var builder = new DbContextOptionsBuilder<AppDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
+            
 
             builder.UseSqlServer(connectionString);
 

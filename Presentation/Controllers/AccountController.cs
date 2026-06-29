@@ -28,10 +28,11 @@ namespace Presentation.Controllers
             {
                 Id = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0")
             }, cancellationToken);
-            return Ok(new Response<UserInfo>(ResponseResult.SUCCESS)
+            return Ok(new Response<UserInfo>(result.Result)
             {
                 Data = result.Data,
-                Message = result.Result == ResponseResult.SUCCESS ? "Get user info successful" : "Get user info failed"
+                Message = result.Message ?? (result.Result == ResponseResult.SUCCESS ? "Get user info successful" : Domain.Constants.Error.UserNotFound),
+                Errors = result.Errors
             });
         }
     }

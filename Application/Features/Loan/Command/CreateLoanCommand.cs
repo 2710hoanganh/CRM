@@ -4,7 +4,6 @@ using Domain.Models.DTO.Loan;
 using Application.Repositories.Base;
 using Application.Repositories;
 using Domain.Constants.AppEnum;
-using Domain.Entities;
 using Application.Services.Base;
 
 namespace Application.Features.Loan.Command
@@ -19,20 +18,29 @@ namespace Application.Features.Loan.Command
             private readonly ILoanRepository _loanRepository;
             private readonly ILoanInterestRate _loanInterestRate;
             private readonly IUserRepaymentRepository _userRepaymentRepository;
+            private readonly IUserReferenceRepository _userReferenceRepository;
             private readonly IDateTimeService _dateTimeService;
-            public CreateLoanCommandHandler(IUnitOfWork unitOfWork, ILoanRepository loanRepository, ILoanInterestRate loanInterestRate, IUserRepaymentRepository userRepaymentRepository, IDateTimeService dateTimeService)
+            public CreateLoanCommandHandler(IUnitOfWork unitOfWork, ILoanRepository loanRepository, ILoanInterestRate loanInterestRate, IUserRepaymentRepository userRepaymentRepository, IDateTimeService dateTimeService, IUserReferenceRepository userReferenceRepository)
             {
                 _unitOfWork = unitOfWork;
                 _loanRepository = loanRepository;
                 _loanInterestRate = loanInterestRate;
                 _userRepaymentRepository = userRepaymentRepository;
                 _dateTimeService = dateTimeService;
+                _userReferenceRepository = userReferenceRepository;
             }
 
             public async Task<Response<bool>> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
             {
                 try
                 {
+                    // check user ref berfor create loan
+                    var userRef = await _userReferenceRepository.Find(x => x.UserId == request.Id, include: null, asNoTracking: true, cancellationToken: cancellationToken);
+                    if (!userRef)
+                    {
+                        return new Response<bool>(ResponseResult.ERROR, Domain.Constants.Error.ReferenceRequired, false, null);
+                    }
+
                     var interestRate = await _loanInterestRate.CalculateInterestRate(request.Request.LoanTerm, (int)LoanRate.BaseRate, cancellationToken);
                     var total = await _loanInterestRate.CalculateTotal(request.Request.LoanAmount, request.Request.LoanTerm, interestRate, cancellationToken);
 
@@ -55,19 +63,6 @@ namespace Application.Features.Loan.Command
                         await _loanRepository.Add(loan, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                        // create repatment plan base on term 
-                        List<UserRepayment> userRepayments = new List<UserRepayment>();
-                        for (int i = 0; i < request.Request.LoanTerm; i++)
-                        {
-                            var item = new UserRepayment
-                            {
-                                LoanId = loan.Id,
-                                RepaymentDate = await _dateTimeService.GetRepaymentDate(DateTime.Now, i, cancellationToken),
-                                Status = (int)UserRepatmentStatus.Pending,
-                            };
-                            userRepayments.Add(item);
-                        }
-                        await _userRepaymentRepository.AddRange(userRepayments, cancellationToken);
                         await _unitOfWork.SaveChangesAsync(cancellationToken);
                         await _unitOfWork.CommitTransactionAsync(transactionId: transaction, cancellationToken);
                     }

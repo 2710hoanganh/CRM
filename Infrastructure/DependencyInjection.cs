@@ -65,6 +65,7 @@ namespace Infrastructure
             services.AddScoped<IDateTimeService, DateTimeService>();
             services.AddScoped<IPenaltyCalculationService, PenaltyCalculationService>();
             services.AddScoped<IVNPayService, VNPayService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             // Register HangFire Service
             services.AddScoped<IHangFireService, HangFireService>();

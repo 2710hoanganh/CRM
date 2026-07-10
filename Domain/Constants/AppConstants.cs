@@ -8,6 +8,7 @@ namespace Domain.Constants.AppConstants
         public static readonly decimal PremiumLoanRate = 0.01M;
 
         public const decimal RiskStep = 0.12m;
+        public const int HighCreditScoreThreshold = 700;
 
 
         public static readonly Dictionary<int, string> Queues = new Dictionary<int, string>()

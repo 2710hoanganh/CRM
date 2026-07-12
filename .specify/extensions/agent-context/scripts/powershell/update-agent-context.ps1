@@ -156,16 +156,19 @@ if ($null -eq $Options) {
         $pythonCandidates += $env:SPECKIT_PYTHON
     }
     $pythonCandidates += @('python3', 'python')
+    $oldEAP = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
     foreach ($candidate in $pythonCandidates) {
         if (Get-Command $candidate -ErrorAction SilentlyContinue) {
             # Verify it is Python 3 with PyYAML available.
-            $null = & $candidate -c "import sys; import yaml; sys.exit(0 if sys.version_info[0] == 3 else 1)" 2>$null
+            $null = & $candidate -c "import sys; import yaml; sys.exit(0 if sys.version_info[0] == 3 else 1)" 2>&1
             if ($LASTEXITCODE -eq 0) {
                 $pythonCmd = $candidate
                 break
             }
         }
     }
+    $ErrorActionPreference = $oldEAP
 
     if ($pythonCmd) {
         $pyScript = $null

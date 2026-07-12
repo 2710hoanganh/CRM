@@ -31,6 +31,7 @@ namespace Persistence.DependencyInjection
             services.AddScoped<ILoanRepository, LoanRepository>();
             services.AddScoped<IUserRepaymentRepository, UserRepaymentRepository>();
             services.AddScoped<ILoanTransactionRepository, LoanTransactionRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
             services.AddScoped<Application.Features.Loan.Query.IDashboardQueries, Persistence.Queries.DashboardQueries>();
             return services;
         }
